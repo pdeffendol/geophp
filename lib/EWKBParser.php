@@ -24,7 +24,9 @@ class EWKBParser
  		$this->srid = null;
  		$this->with_z = null;
  		$this->with_m = null;
- 		return $this->parse_geometry();
+ 		$geom = $this->parse_geometry();
+ 		$this->unpacker->done();
+ 		return $geom;
  	}	
  	
  	private function parse_geometry()

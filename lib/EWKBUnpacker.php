@@ -70,5 +70,13 @@ class EWKBUnpacker
 			$this->double_marker = 'd'; // should be G
 		}	
 	}
+	
+	public function done()
+	{
+		if ($this->position != strlen($this->ewkb))
+		{
+			throw new EWKBFormatError('Trailing data (read '.$this->position.' bytes, have '.strlen($this->ewkb).')');
+		}
+	}
 }
 ?>
