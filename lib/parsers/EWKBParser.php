@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__).'/GeoPHP.php';
+require_once dirname(__FILE__).'/../GeoPHP.php';
 require_once dirname(__FILE__).'/EWKBUnpacker.php';
 
 class EWKBParser

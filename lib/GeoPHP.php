@@ -8,8 +8,7 @@ require_once dirname(__FILE__).'/features/GeometryCollection.php';
 require_once dirname(__FILE__).'/features/MultiPoint.php';
 require_once dirname(__FILE__).'/features/MultiLineString.php';
 require_once dirname(__FILE__).'/features/MultiPolygon.php';
-require_once dirname(__FILE__).'/EWKBParser.php';
-require_once dirname(__FILE__).'/HexEWKBParser.php';
+require_once dirname(__FILE__).'/parsers/HexEWKBParser.php';
 
 abstract class GeoPHP
 {
