@@ -525,7 +525,7 @@ class FeaturesTest extends PHPUnit_Framework_TestCase
 	
 	public function test_geometrycollection_ewkb()
 	{
-		$coll = GeoPHP_GeometryCollection::from_geometries(array(GeoPHP_Point::from_xy(4, -5), GeoPHP_LineString::from_array(array(array(1.1, 2.2), array(3.3, 4.4)))), 444);
+		$coll = GeoPHP_GeometryCollection::from_geometries(array(GeoPHP_Point::from_xy(4, -5, 444), GeoPHP_LineString::from_array(array(array(1.1, 2.2), array(3.3, 4.4)), 444)), 444);
 		$this->assertEquals('0107000020BC010000020000000101000000000000000000104000000000000014C00102000000020000009A9999999999F13F9A999999999901406666666666660A409A99999999991140', $coll->to_hexewkb());
 
 		$coll = GeoPHP_GeometryCollection::from_geometries(array(GeoPHP_Point::from_xym(4, -5, 3, 444), GeoPHP_LineString::from_array(array(array(1.1, 2.2, 3), array(3.3, 4.4, 3)), 444, false, true)), 444, false, true);
