@@ -37,9 +37,14 @@ class GeoPHP_MultiPolygon extends GeoPHP_GeometryCollection
 
 	public static function from_polygons($polys, $srid = null, $with_z = false, $with_m = false)
 	{
-		$mp = new GeoPHP_MultiPolygon($srid, $with_z, $with_m);
-		$mp->geometries = $polys;
-		return $mp;
+		return self::from_geometries($polys, $srid, $with_z, $with_m);
+	}
+
+	public static function from_geometries($geometries, $srid = null, $with_z = false, $with_m = false)
+	{
+		$coll = new GeoPHP_MultiPolygon($srid, $with_z, $with_m);
+		$coll->geometries = $geometries;
+		return $coll;
 	}
 
 	public static function from_array($point_set_sets, $srid = null, $with_z = false, $with_m = false)
