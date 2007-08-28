@@ -2,7 +2,7 @@
 require_once dirname(__FILE__).'/../GeoPHP.php';
 require_once dirname(__FILE__).'/EWKBUnpacker.php';
 
-class EWKBParser
+class GeoPHP_EWKBParser
 {
  	private $type_map = array(
 		1 => 'point',
@@ -20,7 +20,7 @@ class EWKBParser
  	
  	protected function parse($ewkb)
  	{
- 		$this->unpacker = new EWKBUnpacker($ewkb);
+ 		$this->unpacker = new GeoPHP_EWKBUnpacker($ewkb);
  		$this->srid = null;
  		$this->with_z = null;
  		$this->with_m = null;
@@ -64,7 +64,7 @@ class EWKBParser
 		}
 		else
 		{
-			throw new EWKBFormatError("Invalid geometry type");
+			throw new GeoPHP_EWKBFormatError("Invalid geometry type");
 		}
  	}
  	

@@ -8,32 +8,32 @@ class EWKBParserTest extends PHPUnit_Extensions_ExceptionTestCase
 	
 	protected function setUp()
 	{
-		$this->parser = new HexEWKBParser;
+		$this->parser = new GeoPHP_HexEWKBParser;
 	}
 	
 	public function test_fail_truncated_data()
 	{
-		$this->setExpectedException('EWKBFormatError');
+		$this->setExpectedException('GeoPHP_EWKBFormatError');
 		$point = $this->parser->parse('0101000020BC01000000000000000008');
 	}
 	
 	public function test_fail_extra_data()
 	{
-		$this->setExpectedException('EWKBFormatError');
+		$this->setExpectedException('GeoPHP_EWKBFormatError');
 		// Added F00 to the end
 		$point = $this->parser->parse('0101000020BC01000000000000000008400000000000001440F00');
 	}
 	
 	public function test_fail_bad_geometry_type()
 	{
-		$this->setExpectedException('EWKBFormatError');
+		$this->setExpectedException('GeoPHP_EWKBFormatError');
 		// Bad geometry type 9
 		$point = $this->parser->parse('0109000020BC01000000000000000008400000000000001440');
 	}
 	
 	public function test_fail_no_m()
 	{
-		$this->setExpectedException('EWKBFormatError');
+		$this->setExpectedException('GeoPHP_EWKBFormatError');
 		// Turned on with_m flag, but no m coordinate
 		$point = $this->parser->parse('0101000060BC01000000000000000008400000000000001440');
 	}

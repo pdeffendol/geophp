@@ -1,5 +1,5 @@
 <?php
-class EWKBFormatError extends Exception
+class GeoPHP_EWKBFormatError extends Exception
 {
 	
 }
