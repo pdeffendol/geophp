@@ -96,7 +96,7 @@ class EWKBParser
  	
  	private function parse_line_string()
  	{
- 		return $this->parse_point_list('GeoPHP_LinearRing');
+ 		return $this->parse_point_list('GeoPHP_LineString');
  	}
  	
  	private function parse_linear_ring()
@@ -113,7 +113,7 @@ class EWKBParser
  			$rings[] = $this->parse_linear_ring();
  		}
  		
- 		return GeoPHP_Polygon::from_linear_rings($rings, $this->srid);
+ 		return GeoPHP_Polygon::from_linear_rings($rings, $this->srid, $this->with_z, $this->with_m);
  	}
  	
  	private function parse_multi_point()
@@ -145,7 +145,7 @@ class EWKBParser
  			$geoms[] = $this->parse_geometry();
  		}
  		
- 		return call_user_func(array($type, 'from_geometries'), $geoms, $this->srid);
+ 		return call_user_func(array($type, 'from_geometries'), $geoms, $this->srid, $this->with_z, $this->with_m);
  	}
  	
  	private function parse_point_list($type)
@@ -157,7 +157,7 @@ class EWKBParser
  			$points[] = $this->parse_point();
  		}
  		
- 		return call_user_func(array($type, 'from_points'), $points, $this->srid);
+ 		return call_user_func(array($type, 'from_points'), $points, $this->srid, $this->with_z, $this->with_m);
  	}
 }
 ?>
