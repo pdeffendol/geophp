@@ -13,6 +13,34 @@ class GeoPHP_Polygon extends GeoPHP_Geometry
 		$this->rings = array();
 	}
 	
+	public function bounding_box()
+	{
+		if (!$this->with_z)
+		{
+			return $this->rings[0]->bounding_box();
+		}
+		else
+		{
+			$bbox = $this->rings[0]->bounding_box();
+			$min_z = $bbox[0]->z;
+			$max_z = $bbox[1]->z;
+			
+			for($i=1; $i<count($this->rings); $i++)
+			{
+				$ringbbox = $this->rings[$i]->bounding_box();
+				$ll = $ringbbox[0];
+				$ur = $ringbbox[1];
+				if ($ur->z > $max_z) $max_z = $ur->z;
+				if ($ll->z > $min_z) $min_z = $ll->z;
+				
+			}
+			$bbox[0]->z = $min_z;
+			$bbox[1]->z = $max_z;
+			
+			return $bbox;
+		}
+	}
+	
 	public function binary_representation($allow_z = true, $allow_m = true)
 	{
         $rep = pack('V', count($this->rings));

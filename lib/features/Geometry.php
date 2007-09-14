@@ -1,10 +1,29 @@
 <?php
 abstract class GeoPHP_Geometry
 {
+	/**
+	 * SRID of the data
+	 */
 	public $srid;
+	
+	/**
+	 * Whether z component of geometry is meaningful
+	 */
 	public $with_z;
+	
+	/**
+	 * Whether m component of geometry is meaningful
+	 */
 	public $with_m;
+	
+	/**
+	 * WKB type code of this geometry type
+	 */
 	public $binary_type;
+	
+	/**
+	 * WKT type string of this geometry type
+	 */
 	public $text_type;
 	
 	public function __construct($srid = null, $with_z = false, $with_m = false)
@@ -12,6 +31,27 @@ abstract class GeoPHP_Geometry
 		$this->srid = $srid===null?GeoPHP::DEFAULT_SRID:$srid;
 		$this->with_z = $with_z;
 		$this->with_m = $with_m;
+	}
+	
+	/**
+	 * Calculate the bounds of the geometry as a set of two Points.
+	 */
+	public function bounding_box()
+	{
+		// Implement in child classes
+	}
+	
+	/**
+	 * Calculate the extent of the geometry as an Envelope object
+	 */
+	public function extent()
+	{
+		return GeoPHP_Envelope::from_points($this->bounding_box(), $this->srid, $this->with_z);		
+	}
+	
+	public function envelope()
+	{
+		return $this->extent();
 	}
 	
 	public function to_ewkb($allow_srid = true, $allow_z = true, $allow_m = true)

@@ -14,6 +14,56 @@ class GeoPHP_GeometryCollection extends GeoPHP_Geometry
 		$this->geometries = array();
 	}
 	
+	public function bounding_box()
+	{
+		$max_x = -INF;
+		$max_y = -INF;
+		$min_x = INF;
+		$min_y = INF;
+		
+		if (!$this->with_z)
+		{
+			foreach ($this->geometries as $geom)
+			{
+				$bbox = $geom->bounding_box();
+				$ll = $bbox[0];
+				$ur = $bbox[1];
+				
+				if ($ll->x < $min_x) $min_x = $ll->x;
+				if ($ll->y < $min_y) $min_y = $ll->y;
+				if ($ur->x > $max_x) $max_x = $ur->x;
+				if ($ur->y > $max_y) $max_y = $ur->y;
+			}
+			return array(
+				GeoPHP_Point::from_xy($min_x, $min_y),
+				GeoPHP_Point::from_xy($max_x, $max_y)
+			);
+		}
+		else
+		{
+			$max_z = INF;
+			$min_z = -INF;			
+
+			foreach ($this->geometries as $geom)
+			{
+				$bbox = $geom->bounding_box();
+				$ll = $bbox[0];
+				$ur = $bbox[1];
+				
+				if ($ll->x < $min_x) $min_x = $ll->x;
+				if ($ll->y < $min_y) $min_y = $ll->y;
+				if ($ll->z < $min_z) $min_z = $ll->z;
+				if ($ur->x > $max_x) $max_x = $ur->x;
+				if ($ur->y > $max_y) $max_y = $ur->y;
+				if ($ur->z > $max_z) $max_y = $ur->z;
+			}
+			return array(
+				GeoPHP_Point::from_xy($min_x, $min_y),
+				GeoPHP_Point::from_xy($max_x, $max_y)
+			);
+		}
+	}
+	
 	public function binary_representation($allow_z = true, $allow_m = true)
 	{
         $rep = pack('V', count($this->geometries));

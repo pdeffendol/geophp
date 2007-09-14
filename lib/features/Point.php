@@ -60,6 +60,24 @@ class GeoPHP_Point extends GeoPHP_Geometry
 		$this->z = $z;
 	}
 	
+	public function bounding_box()
+	{
+		if (!$this->with_z)
+		{
+			return array(
+				GeoPHP_Point::from_xy($this->x, $this->y),
+				GeoPHP_Point::from_xy($this->x, $this->y)
+			);
+		}
+		else
+		{
+			return array(
+				GeoPHP_Point::from_xyz($this->x, $this->y, $this->z),
+				GeoPHP_Point::from_xyz($this->x, $this->y, $this->z)
+			);
+		}
+	}
+	
 	public function binary_representation($allow_z = true, $allow_m = true)
 	{
         $rep = pack('dd', $this->x, $this->y);

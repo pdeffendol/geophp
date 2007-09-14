@@ -132,6 +132,29 @@ class FeaturesTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('SRID=444;POINT(1.1 2.2 3.3 4.4)', $p->to_ewkt());
 	}
 	
+	public function test_point_extent()
+	{
+		$p = GeoPHP_Point::from_xy(1.1, 2.2, 444);
+		$env = $p->extent();
+		$this->assertEquals($env->ll, $env->ur);
+		$this->assertEquals($p->x, $env->ll->x);
+		$this->assertEquals($p->y, $env->ll->y);
+		$this->assertEquals(false, $env->with_z);
+
+		$p = GeoPHP_Point::from_xyz(1.1, 2.2, 3.3, 444);
+		$env = $p->extent();
+		$this->assertEquals($env->ll, $env->ur);
+		$this->assertEquals($p->x, $env->ll->x);
+		$this->assertEquals($p->y, $env->ll->y);
+		$this->assertEquals($p->z, $env->ll->z);
+		$this->assertEquals(true, $env->with_z);
+		
+		$this->assertEquals($p->x, $env->left);
+		$this->assertEquals($p->x, $env->right);
+		$this->assertEquals($p->y, $env->top);
+		$this->assertEquals($p->y, $env->bottom);
+	}
+	
 	public function test_multipoint_create()
 	{
 		$coords = array(array(1.1, 2.2, -3.3, 0), array(3.3, 4.4, 25, -10));
@@ -539,6 +562,37 @@ class FeaturesTest extends PHPUnit_Framework_TestCase
 
 		$coll = GeoPHP_GeometryCollection::from_geometries(array(GeoPHP_Point::from_xym(4, -5, 3, 444), GeoPHP_LineString::from_array(array(array(1.1, 2.2, 3), array(3.3, 4.4, 3)), 444, false, true)), 444, false, true);
 		$this->assertEquals('SRID=444;GEOMETRYCOLLECTIONM(POINTM(4 -5 3),LINESTRINGM(1.1 2.2 3,3.3 4.4 3))', $coll->to_ewkt());
+	}
+	
+	public function test_extent()
+	{
+		$ring1_coords = array(array(0,1,0),
+		                array(0,6,1),
+		                array(5,6,2),
+		                array(5,1,1),
+		                array(0,1,0));
+		$ring2_coords = array(array(1,2,0),
+		                array(1,4,1),
+		                array(4,4,2),
+		                array(4,2,1),
+		                array(1,2,0));
+		
+		$ring1 = GeoPHP_LinearRing::from_array($ring1_coords, 444, true);
+		$ring2 = GeoPHP_LinearRing::from_array($ring2_coords, 444, true);
+		
+		$poly = GeoPHP_Polygon::from_linear_rings(array($ring1, $ring2), 444, true);
+		
+		$e = $poly->extent();
+
+		$this->assertEquals('GeoPHP_Point', get_class($e->ll));
+		$this->assertEquals('GeoPHP_Point', get_class($e->ur));
+		
+		$this->assertEquals(0, $e->ll->x);
+		$this->assertEquals(1, $e->ll->y);
+		$this->assertEquals(0, $e->ll->z);
+		$this->assertEquals(5, $e->ur->x);
+		$this->assertEquals(6, $e->ur->y);
+		$this->assertEquals(2, $e->ur->z);
 	}
 }
 ?>

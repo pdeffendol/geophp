@@ -14,6 +14,48 @@ class GeoPHP_LineString extends GeoPHP_Geometry
 		$this->points = array();
 	}
 	
+	public function bounding_box()
+	{
+		$max_x = -INF;
+		$max_y = -INF;
+		$min_x = INF;
+		$min_y = INF;
+		
+		if (!$this->with_z)
+		{
+			foreach ($this->points as $p)
+			{
+				if ($p->x < $min_x) $min_x = $p->x;
+				if ($p->y < $min_y) $min_y = $p->y;
+				if ($p->x > $max_x) $max_x = $p->x;
+				if ($p->y > $max_y) $max_y = $p->y;
+			}
+			return array(
+				GeoPHP_Point::from_xy($min_x, $min_y),
+				GeoPHP_Point::from_xy($max_x, $max_y)
+			);
+		}
+		else
+		{
+			$max_z = -INF;
+			$min_z = INF;			
+
+			foreach ($this->points as $p)
+			{
+				if ($p->x < $min_x) $min_x = $p->x;
+				if ($p->y < $min_y) $min_y = $p->y;
+				if ($p->z < $min_z) $min_z = $p->z;
+				if ($p->x > $max_x) $max_x = $p->x;
+				if ($p->y > $max_y) $max_y = $p->y;
+				if ($p->z > $max_z) $max_z = $p->z;
+			}
+			return array(
+				GeoPHP_Point::from_xyz($min_x, $min_y, $min_z),
+				GeoPHP_Point::from_xyz($max_x, $max_y, $max_z)
+			);
+		}
+	}
+
 	public function binary_representation($allow_z = true, $allow_m = true)
 	{
         $rep = pack('V', count($this->points));
