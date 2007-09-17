@@ -18,7 +18,7 @@ class GeoPHP_EWKBParser
  	private $with_z;
  	private $with_m;
  	
- 	protected function parse($ewkb)
+ 	public function parse($ewkb)
  	{
  		$this->unpacker = new GeoPHP_EWKBUnpacker($ewkb);
  		$this->srid = null;
