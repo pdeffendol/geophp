@@ -122,5 +122,23 @@ abstract class GeoPHP_Geometry
 	{
 		return $this->to_ewkt(false, false, false);
 	}
+	
+	public static function from_ewkt($ewkt)
+	{
+		$parser = new GeoPHP_EWKTParser;
+		return $parser->parse($ewkt);
+	}
+	
+	public static function from_ewkb($ewkb)
+	{
+		$parser = new GeoPHP_EWKBParser;
+		return $parser->parse($ewkb);
+	}
+	
+	public static function from_hexewkb($hexewkb)
+	{
+		$parser = new GeoPHP_HexEWKBParser;
+		return $parser->parse($hexewkb);
+	}
 }
 ?>
