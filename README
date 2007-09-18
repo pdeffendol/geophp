@@ -21,9 +21,9 @@ Data in 2d, 3dz, 3dm, and 4d are supported.
 Input Formats
 -------------
 
- * EWKB
- * WKB
+ * EWKB/WKB
  * HexEWKB (default output of PostGIS)
+ * EWKT/WKT
   
 Output Formats
 --------------
@@ -37,8 +37,6 @@ Output Formats
 TODO
 ----
 
- * WKT/EWKT parsing
- * Bounding box calculations
   
 Acknowledgements
 ----------------
