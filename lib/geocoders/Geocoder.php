@@ -1,15 +1,21 @@
 <?php
 abstract class GeoPHP_Geocoder
 {
-	
+	protected $options;
 	function __construct($options = null)
 	{
-		
+		$this->options = array(
+			"cache" => null,
+			"cache_timeout" => 7200
+		);
+
+		if ($options !== null)
+			$this->options = array_merge($this->options, $options);
 	}
-	
-	public function lookup($location)
+
+	public function locate($location)
 	{
-		
+
 	}
 }
 ?>
