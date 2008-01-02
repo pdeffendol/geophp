@@ -1,12 +1,11 @@
 <?php
 require_once dirname(__FILE__).'/Geocoder.php';
-require_once dirname(__FILE__).'/YahooGeocoderError.php';
-require_once dirname(__FILE__).'/../CCurl.php';
+require_once dirname(__FILE__).'/GoogleGeocoderError.php';
 
-class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
+class GeoPHP_GoogleGeocoder extends GeoPHP_Geocoder
 {
-	private $api_url = 'http://local.yahooapis.com/MapsService/V1/geocode';
-//	private $api_key = "djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--";
+	private $api_url = 'http://maps.google.com/maps/geo';
+//	private $api_key = "ABQIAAAA1WyaXpV_0Jhp1knJV5i7XRST-KG1lUPPqvb7mBlZbBX29iXO4hRN4syFNonIVSGmte-rI23N8vijwQ";
 	private $api_key ="";
 	private $is_caching = false;
 	private $cache_file_path;
@@ -35,9 +34,9 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 	public function locate($location)
 	{
 		$params = array(
-			'appid' => $this->api_key,
-			'location' => rawurlencode($location),
-			'output' => "php"
+			'q' => rawurlencode($location),
+			'key' => $this->api_key,
+			'output' => "json"
 		);
 
 		$request_url = $this->api_url.'?'.http_build_query($params);
@@ -61,32 +60,29 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 	private function format_output($response)
 	{
 		include_once dirname(__FILE__).'/../features/Point.php';
-		$r = unserialize($response);
-
 		$location_details = array();
-		$results = array();
-
-		if (array_key_exists('Latitude',$r['ResultSet']['Result']))
-			$results[]=$r['ResultSet']['Result'];
-		else
-			$results = $r['ResultSet']['Result'];
+		$res = json_decode($response,true);
+		$results = $res['Placemark'];
 
 		foreach ($results as $res)
 		{
 			$result = array_change_key_case($res,CASE_LOWER);
 			$p = new GeoPHP_Point();
-			$p->set_xy($result['latitude'],$result['longitude']);
-
+			$p->set_xy($result['point']['coordinates'][1],$result['point']['coordinates'][0]);
 			$output = array();
+
 			$output['coordiantes'] = $p;
 			$output['address'] = $result['address'];
-			$output['city'] = $result['city'];
-			$output['state'] = $result['state'];
-			$output['zip'] = $result['zip'];
-			$output['country'] = $result['country'];
+			if ($result['addressdetails']['Country']['AdministrativeArea']['Locality'])
+				$output['city'] = $result['addressdetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
+			else
+				$output['city'] = $result['addressdetails']['Country']['AdministrativeArea']['SubAdministrativeArea']['SubAdministrativeAreaName'];
+
+			$output['state'] = $result['addressdetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
+			$output['zip'] = $result['addressdetails']['Country']['AdministrativeArea']['Locality']['PostalCode']['PostalCodeNumber'];
+			$output['country'] = $result['addressdetails']['Country']['CountryNameCode'];
 			$location_details[] = $output;
 		}
-
 		return $location_details;
 	}
 
@@ -118,7 +114,7 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 	{
 		if ($response !== false)
 		{
-			$tmpf = tempnam('/tmp','YWS');
+			$tmpf = tempnam('/tmp','GOOGLE');
 			$fp = fopen($tmpf,"w");
 			fwrite($fp, $response);
 			fclose($fp);
@@ -141,15 +137,12 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 
 	 private function get_url_response($url)
 	 {
-		$curl = new CCurl($url);
-
-		$response = $curl->execute();
-		if (($status_code = $curl->get_status_code()) == 200)
+		$response = file_get_contents($url);
+		$res = json_decode($response,true);
+		if ($res['Status']['code'] == 200)
 			return $response;
 		else
-			throw new GeoPhp_YahooGeocoderError("Bad Request Status Code:: ".$status_code);
-
-		$curl->close();
+			throw new GeoPhp_GoogleGeocoderError("Bad Request Status Code:: ".$res['Status']['code']);
 	 }
 }
 ?>
