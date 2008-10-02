@@ -67,8 +67,7 @@ class GeoPHP_GoogleGeocoder extends GeoPHP_Geocoder
 		foreach ($results as $res)
 		{
 			$result = array_change_key_case($res,CASE_LOWER);
-			$p = new GeoPHP_Point();
-			$p->set_xy($result['point']['coordinates'][1],$result['point']['coordinates'][0]);
+			$p = GeoPHP_Point::from_xy($result['point']['coordinates'][1],$result['point']['coordinates'][0]);
 			$output = array();
 
 			$output['coordinates'] = $p;
