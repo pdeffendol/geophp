@@ -1,10 +1,9 @@
 <?php
 require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/Extensions/ExceptionTestCase.php';
 require_once dirname(__FILE__).'/../lib/geocoders/YahooGeocoder.php';
 require_once dirname(__FILE__).'/../lib/GeoPHP.php';
 
-class YahooGeocoderTest extends PHPUnit_Extensions_ExceptionTestCase
+class YahooGeocoderTest extends PHPUnit_Framework_TestCase
 {
 
 	public function test01_locate()
@@ -23,7 +22,7 @@ class YahooGeocoderTest extends PHPUnit_Extensions_ExceptionTestCase
 		$this->assertNotNull($result);
 		$this->assertTrue(is_array($result));
 		$this->assertEquals(1,count($result));
-		$this->assertEquals(41.719610, $result[0]['coordiantes']->x);
+		$this->assertEquals(41.719610, $result[0]['coordinates']->x);
 	}
 
 	public function test03_locate()
