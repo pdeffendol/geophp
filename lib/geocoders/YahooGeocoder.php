@@ -74,7 +74,7 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 		foreach ($results as $res)
 		{
 			$result = array_change_key_case($res,CASE_LOWER);
-			$p = GeoPHP_Point::from_xy($result['latitude'],$result['longitude']);
+			$p = GeoPHP_Point::from_xy($result['longitude'], $result['latitude']);
 
 			$output = array();
 			$output['coordinates'] = $p;
