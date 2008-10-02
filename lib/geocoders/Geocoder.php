@@ -1,4 +1,6 @@
 <?php
+require_once dirname(__FILE__).'/../GeoPHP.php';
+
 abstract class GeoPHP_Geocoder
 {
 	protected $options;
