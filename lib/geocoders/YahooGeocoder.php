@@ -78,7 +78,7 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 			$p->set_xy($result['latitude'],$result['longitude']);
 
 			$output = array();
-			$output['coordiantes'] = $p;
+			$output['coordinates'] = $p;
 			$output['address'] = $result['address'];
 			$output['city'] = $result['city'];
 			$output['state'] = $result['state'];

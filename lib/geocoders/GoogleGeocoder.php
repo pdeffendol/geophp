@@ -71,7 +71,7 @@ class GeoPHP_GoogleGeocoder extends GeoPHP_Geocoder
 			$p->set_xy($result['point']['coordinates'][1],$result['point']['coordinates'][0]);
 			$output = array();
 
-			$output['coordiantes'] = $p;
+			$output['coordinates'] = $p;
 			$output['address'] = $result['address'];
 			if ($result['addressdetails']['Country']['AdministrativeArea']['Locality'])
 				$output['city'] = $result['addressdetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
