@@ -34,7 +34,7 @@ class GeoPHP_GoogleGeocoder extends GeoPHP_Geocoder
 	public function locate($location)
 	{
 		$params = array(
-			'q' => rawurlencode($location),
+			'q' => $location,
 			'key' => $this->api_key,
 			'output' => "json"
 		);

@@ -35,8 +35,8 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 	public function locate($location)
 	{
 		$params = array(
-			'appid' => $this->api_key,
-			'location' => rawurlencode($location),
+			'appid'  => $this->api_key,
+			'location'   => $location,
 			'output' => "php"
 		);
 
