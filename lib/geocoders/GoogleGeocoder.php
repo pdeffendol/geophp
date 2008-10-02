@@ -40,7 +40,7 @@ class GeoPHP_GoogleGeocoder extends GeoPHP_Geocoder
 		);
 
 		$request_url = $this->api_url.'?'.http_build_query($params);
-
+       
 		// Check the cache
 		if ($this->is_caching && $this->cache_exists($location))
 			$response = $this->get_file_data($this->cache_filename);
@@ -138,10 +138,19 @@ class GeoPHP_GoogleGeocoder extends GeoPHP_Geocoder
 	 {
 		$response = file_get_contents($url);
 		$res = json_decode($response,true);
-		if ($res['Status']['code'] == 200)
-			return $response;
-		else
-			throw new GeoPhp_GoogleGeocoderError("Bad Request Status Code:: ".$res['Status']['code']);
+		try
+		{
+			if ($res['Status']['code'] == 200)
+				return $response;
+			else
+			{
+				throw new GeoPhp_GoogleGeocoderError("Bad Request made.");
+			}	
+		}	
+		catch (GeoPhp_GoogleGeocoderError $geo)
+		{
+			return $geo->getMessage();
+		}	
 	 }
 }
 ?>

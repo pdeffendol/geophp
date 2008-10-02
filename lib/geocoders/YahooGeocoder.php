@@ -39,9 +39,8 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 			'location'   => $location,
 			'output' => "php"
 		);
-
 		$request_url = $this->api_url.'?'.http_build_query($params);
-
+		
 		// Check the cache
 		if ($this->is_caching && $this->cache_exists($location))
 			$response = $this->get_file_data($this->cache_filename);
@@ -50,8 +49,7 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 			$response = $this->get_url_response($request_url);
 			if ($this->is_caching)
 				$this->cache_response($response,$this->cache_filename);
-		}
-
+		}	
 		return $this->format_output($response);
 	}
 
@@ -62,30 +60,38 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 	{
 		include_once dirname(__FILE__).'/../features/Point.php';
 		$r = unserialize($response);
-
 		$location_details = array();
-		$results = array();
-
-		if (array_key_exists('Latitude',$r['ResultSet']['Result']))
-			$results[]=$r['ResultSet']['Result'];
-		else
-			$results = $r['ResultSet']['Result'];
-
-		foreach ($results as $res)
+        if ($r != null)
 		{
-			$result = array_change_key_case($res,CASE_LOWER);
-			$p = GeoPHP_Point::from_xy($result['longitude'], $result['latitude']);
+			$results = array();
+			if (array_key_exists('Latitude',$r['ResultSet']['Result']))
+				$results[]=$r['ResultSet']['Result'];
+			else
+				$results = $r['ResultSet']['Result'];
+			
+			$location_details['valid'] = true;
+			$location_details['result'] = array();
 
-			$output = array();
-			$output['coordinates'] = $p;
-			$output['address'] = $result['address'];
-			$output['city'] = $result['city'];
-			$output['state'] = $result['state'];
-			$output['zip'] = $result['zip'];
-			$output['country'] = $result['country'];
-			$location_details[] = $output;
+			foreach ($results as $res)
+			{
+				$result = array_change_key_case($res,CASE_LOWER);
+				$p = GeoPHP_Point::from_xy($result['longitude'], $result['latitude']);
+
+				$output = array();
+				$output['coordiantes'] = $p;
+				$output['address'] = $result['address'];
+				$output['city'] = $result['city'];
+				$output['state'] = $result['state'];
+				$output['zip'] = $result['zip'];
+				$output['country'] = $result['country'];
+				$location_details['result'][] = $output;
+			}
 		}
-
+		else
+		{
+			$location_details['valid'] = false;
+			$location_details['result'] = $response;
+		}
 		return $location_details;
 	}
 
@@ -139,15 +145,23 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 	 */
 
 	 private function get_url_response($url)
-	 {
+	 {  
 		$curl = new CCurl($url);
 
 		$response = $curl->execute();
-		if (($status_code = $curl->get_status_code()) == 200)
-			return $response;
-		else
-			throw new GeoPhp_YahooGeocoderError("Bad Request Status Code:: ".$status_code);
-
+		try
+		{
+			if (($status_code = $curl->get_status_code()) == 200)
+				return $response;
+			else
+			{
+					throw new GeoPhp_YahooGeocoderError("Enter a valid U.S Zipcode");		
+			}
+		}
+		catch (GeoPhp_YahooGeocoderError $geo)
+		{
+			return $geo->getMessage();
+		}
 		$curl->close();
 	 }
 }
