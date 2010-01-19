@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/Geometry.php';
+namespace GeoPHP;
 
-class GeoPHP_Point extends GeoPHP_Geometry
+class Point extends Geometry
 {
 	public $x;
 	public $y;
@@ -65,15 +65,15 @@ class GeoPHP_Point extends GeoPHP_Geometry
 		if (!$this->with_z)
 		{
 			return array(
-				GeoPHP_Point::from_xy($this->x, $this->y),
-				GeoPHP_Point::from_xy($this->x, $this->y)
+				Point::from_xy($this->x, $this->y),
+				Point::from_xy($this->x, $this->y)
 			);
 		}
 		else
 		{
 			return array(
-				GeoPHP_Point::from_xyz($this->x, $this->y, $this->z),
-				GeoPHP_Point::from_xyz($this->x, $this->y, $this->z)
+				Point::from_xyz($this->x, $this->y, $this->z),
+				Point::from_xyz($this->x, $this->y, $this->z)
 			);
 		}
 	}
@@ -96,14 +96,14 @@ class GeoPHP_Point extends GeoPHP_Geometry
 	
 	public static function from_xy($x, $y, $srid = null)
 	{
-		$point = new GeoPHP_Point($srid);
+		$point = new Point($srid);
 		$point->set_xy($x, $y);
 		return $point;
 	}
 	
 	public static function from_xyz($x, $y, $z, $srid = null)
 	{
-		$point = new GeoPHP_Point($srid, true);
+		$point = new Point($srid, true);
 		$point->set_xyz($x, $y, $z);
 		return $point;
 	}
@@ -115,7 +115,7 @@ class GeoPHP_Point extends GeoPHP_Geometry
 	
 	public static function from_xym($x, $y, $m, $srid = null)
 	{
-		$point = new GeoPHP_Point($srid, false, true);
+		$point = new Point($srid, false, true);
 		$point->set_xy($x, $y);
 		$point->m = $m;
 		return $point;
@@ -123,7 +123,7 @@ class GeoPHP_Point extends GeoPHP_Geometry
 	
 	public static function from_xyzm($x, $y, $z, $m, $srid = null)
 	{
-		$point = new GeoPHP_Point($srid, true, true);
+		$point = new Point($srid, true, true);
 		$point->set_xyz($x, $y, $z);
 		$point->m = $m;
 		return $point;

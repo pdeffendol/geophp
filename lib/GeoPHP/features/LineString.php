@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/Geometry.php';
+namespace GeoPHP;
 
-class GeoPHP_LineString extends GeoPHP_Geometry
+class LineString extends Geometry
 {
 	public $points;
 	
@@ -31,8 +31,8 @@ class GeoPHP_LineString extends GeoPHP_Geometry
 				if ($p->y > $max_y) $max_y = $p->y;
 			}
 			return array(
-				GeoPHP_Point::from_xy($min_x, $min_y),
-				GeoPHP_Point::from_xy($max_x, $max_y)
+				Point::from_xy($min_x, $min_y),
+				Point::from_xy($max_x, $max_y)
 			);
 		}
 		else
@@ -50,8 +50,8 @@ class GeoPHP_LineString extends GeoPHP_Geometry
 				if ($p->z > $max_z) $max_z = $p->z;
 			}
 			return array(
-				GeoPHP_Point::from_xyz($min_x, $min_y, $min_z),
-				GeoPHP_Point::from_xyz($max_x, $max_y, $max_z)
+				Point::from_xyz($min_x, $min_y, $min_z),
+				Point::from_xyz($max_x, $max_y, $max_z)
 			);
 		}
 	}
@@ -73,17 +73,17 @@ class GeoPHP_LineString extends GeoPHP_Geometry
 
 	public static function from_points($points, $srid = null, $with_z = false, $with_m = false)
 	{
-		$line = new GeoPHP_LineString($srid, $with_z, $with_m);
+		$line = new LineString($srid, $with_z, $with_m);
 		$line->points = $points;
 		return $line;
 	}
 	
 	public static function from_array($points, $srid = null, $with_z = false, $with_m = false)
 	{
-		$line = new GeoPHP_LineString($srid, $with_z, $with_m);
+		$line = new LineString($srid, $with_z, $with_m);
 		foreach ($points as $point)
 		{
-			$line->points[] = GeoPHP_Point::from_array($point, $srid, $with_z, $with_m);
+			$line->points[] = Point::from_array($point, $srid, $with_z, $with_m);
 		}
 		return $line;
 	}

@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/EWKBParser.php';
+namespace GeoPHP;
 
-class GeoPHP_HexEWKBParser extends GeoPHP_EWKBParser
+class HexEWKBParser extends EWKBParser
 {
 	public function decode_hex($hex)
 	{

@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/GeometryCollection.php';
+namespace GeoPHP;
 
-class GeoPHP_MultiPolygon extends GeoPHP_GeometryCollection
+class MultiPolygon extends GeometryCollection
 {
 	public function __construct($srid = null, $with_z = false, $with_m = false)
 	{
@@ -42,17 +42,17 @@ class GeoPHP_MultiPolygon extends GeoPHP_GeometryCollection
 
 	public static function from_geometries($geometries, $srid = null, $with_z = false, $with_m = false)
 	{
-		$coll = new GeoPHP_MultiPolygon($srid, $with_z, $with_m);
+		$coll = new MultiPolygon($srid, $with_z, $with_m);
 		$coll->geometries = $geometries;
 		return $coll;
 	}
 
 	public static function from_array($point_set_sets, $srid = null, $with_z = false, $with_m = false)
 	{
-		$mp = new GeoPHP_MultiPolygon($srid, $with_z, $with_m);
+		$mp = new MultiPolygon($srid, $with_z, $with_m);
 		foreach ($point_set_sets as $point_set)
 		{
-			$mp->geometries[] = GeoPHP_Polygon::from_array($point_set, $srid, $with_z, $with_m);
+			$mp->geometries[] = Polygon::from_array($point_set, $srid, $with_z, $with_m);
 		}
 		return $mp;
 	}

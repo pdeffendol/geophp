@@ -1,8 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/Geocoder.php';
-require_once dirname(__FILE__).'/GoogleGeocoderError.php';
+namespace GeoPHP;
 
-class GeoPHP_GoogleGeocoder extends GeoPHP_Geocoder
+class GoogleGeocoder extends Geocoder
 {
 	private $api_url = 'http://maps.google.com/maps/geo';
 //	private $api_key = "ABQIAAAA1WyaXpV_0Jhp1knJV5i7XRST-KG1lUPPqvb7mBlZbBX29iXO4hRN4syFNonIVSGmte-rI23N8vijwQ";
@@ -59,7 +58,6 @@ class GeoPHP_GoogleGeocoder extends GeoPHP_Geocoder
 	 */
 	private function format_output($response)
 	{
-		include_once dirname(__FILE__).'/../features/Point.php';
 		$location_details = array();
 		$res = json_decode($response,true);
 		$results = $res['Placemark'];
@@ -67,7 +65,7 @@ class GeoPHP_GoogleGeocoder extends GeoPHP_Geocoder
 		foreach ($results as $res)
 		{
 			$result = array_change_key_case($res,CASE_LOWER);
-			$p = GeoPHP_Point::from_xy($result['point']['coordinates'][1],$result['point']['coordinates'][0]);
+			$p = Point::from_xy($result['point']['coordinates'][1],$result['point']['coordinates'][0]);
 			$output = array();
 
 			$output['coordinates'] = $p;
@@ -144,7 +142,7 @@ class GeoPHP_GoogleGeocoder extends GeoPHP_Geocoder
 				return $response;
 			else
 			{
-				throw new GeoPhp_GoogleGeocoderError("Bad Request made.");
+				throw new GoogleGeocoderError("Bad Request made.");
 			}	
 		}	
 		catch (GeoPhp_GoogleGeocoderError $geo)

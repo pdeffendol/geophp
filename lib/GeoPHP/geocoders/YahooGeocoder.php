@@ -1,9 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/Geocoder.php';
-require_once dirname(__FILE__).'/YahooGeocoderError.php';
-require_once dirname(__FILE__).'/../CCurl.php';
+namespace GeoPHP;
 
-class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
+class YahooGeocoder extends Geocoder
 {
 	private $api_url = 'http://local.yahooapis.com/MapsService/V1/geocode';
 //	private $api_key = "djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--";
@@ -58,7 +56,6 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 	 */
 	private function format_output($response)
 	{
-		include_once dirname(__FILE__).'/../features/Point.php';
 		$r = unserialize($response);
 		$location_details = array();
         if ($r != null)
@@ -75,10 +72,10 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 			foreach ($results as $res)
 			{
 				$result = array_change_key_case($res,CASE_LOWER);
-				$p = GeoPHP_Point::from_xy($result['longitude'], $result['latitude']);
+				$p = Point::from_xy($result['longitude'], $result['latitude']);
 
 				$output = array();
-				$output['coordiantes'] = $p;
+				$output['coordinates'] = $p;
 				$output['address'] = $result['address'];
 				$output['city'] = $result['city'];
 				$output['state'] = $result['state'];
@@ -155,10 +152,10 @@ class GeoPHP_YahooGeocoder extends GeoPHP_Geocoder
 				return $response;
 			else
 			{
-					throw new GeoPhp_YahooGeocoderError("Enter a valid U.S Zipcode");		
+					throw new YahooGeocoderError("Enter a valid U.S Zipcode");		
 			}
 		}
-		catch (GeoPhp_YahooGeocoderError $geo)
+		catch (YahooGeocoderError $geo)
 		{
 			return $geo->getMessage();
 		}

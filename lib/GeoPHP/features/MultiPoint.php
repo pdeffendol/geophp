@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/Geometry.php';
+namespace GeoPHP;
 
-class GeoPHP_MultiPoint extends GeoPHP_GeometryCollection
+class MultiPoint extends GeometryCollection
 {
 	public function __construct($srid = null, $with_z = false, $with_m = false)
 	{
@@ -42,17 +42,17 @@ class GeoPHP_MultiPoint extends GeoPHP_GeometryCollection
 
 	public static function from_geometries($geometries, $srid = null, $with_z = false, $with_m = false)
 	{
-		$coll = new GeoPHP_MultiPoint($srid, $with_z, $with_m);
+		$coll = new MultiPoint($srid, $with_z, $with_m);
 		$coll->geometries = $geometries;
 		return $coll;
 	}
 	
 	public static function from_array($points, $srid = null, $with_z = false, $with_m = false)
 	{
-		$mp = new GeoPHP_MultiPoint($srid, $with_z, $with_m);
+		$mp = new MultiPoint($srid, $with_z, $with_m);
 		foreach ($points as $point)
 		{
-			$mp->geometries[] = GeoPHP_Point::from_array($point, $srid, $with_z, $with_m);
+			$mp->geometries[] = Point::from_array($point, $srid, $with_z, $with_m);
 		}
 		return $mp;
 	}

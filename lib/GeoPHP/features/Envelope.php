@@ -1,19 +1,20 @@
 <?php
+namespace GeoPHP;
 
 /**
  * Represents the bounding box of a geometry.
  */
-class GeoPHP_Envelope
+class Envelope
 {
 	/**
 	 * Lower left corner point
-	 * @var GeoPHP_Point
+	 * @var Point
 	 */
 	public $ll;
 
 	/**
 	 * Upper right corner point
-	 * @var GeoPHP_Point
+	 * @var Point
 	 */
 	public $ur;
 
@@ -22,7 +23,7 @@ class GeoPHP_Envelope
 	
 	public function __construct($srid = null, $with_z = false)
 	{
-		$this->srid = $srid===null?GeoPHP::DEFAULT_SRID:$srid;
+		$this->srid = $srid === null ? DEFAULT_SRID : $srid;
 		$this->with_z = $with_z;
 	}
 	
@@ -46,7 +47,7 @@ class GeoPHP_Envelope
 	 */
 	public function center()
 	{
-		return GeoPHP_Point::from_xy(($this->ll->x + $this->ur->x)/2, ($this->ll->y + $this->ur->y)/2);
+		return Point::from_xy(($this->ll->x + $this->ur->x)/2, ($this->ll->y + $this->ur->y)/2);
 	}
 
 	/**
@@ -54,7 +55,7 @@ class GeoPHP_Envelope
 	 */
 	public static function from_points($points, $srid = null, $with_z = false)
 	{
-		$e = new GeoPHP_Envelope($srid, $with_z);
+		$e = new Envelope($srid, $with_z);
 		list($e->ll, $e->ur) = $points;
 		return $e;
 	}
@@ -64,9 +65,9 @@ class GeoPHP_Envelope
 	 */
 	public static function from_array($coords, $srid = null, $with_z = false)
 	{
-		$e = new GeoPHP_Envelope($srid, $with_z);
-		$e->ll = GeoPHP_Point::from_array($coords[0], $srid, $with_z);
-		$e->ur = GeoPHP_Point::from_array($coords[1], $srid, $with_z);
+		$e = new Envelope($srid, $with_z);
+		$e->ll = Point::from_array($coords[0], $srid, $with_z);
+		$e->ur = Point::from_array($coords[1], $srid, $with_z);
 		return $e;
 	}
 }

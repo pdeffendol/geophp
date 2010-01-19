@@ -1,8 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/../GeoPHP.php';
-require_once dirname(__FILE__).'/EWKTTokenizer.php';
+namespace GeoPHP;
 
-class GeoPHP_EWKTParser
+class EWKTParser
 {
  	private $type_map = array(
 		'POINT' => 'point',
@@ -22,7 +21,7 @@ class GeoPHP_EWKTParser
  	
  	public function parse($ewkt)
  	{
-		$this->tokenizer = new GeoPHP_EWKTTokenizer($ewkt);
+		$this->tokenizer = new EWKTTokenizer($ewkt);
  		$this->srid = null;
  		$this->with_z = false;
  		$this->with_m = false;
@@ -41,24 +40,24 @@ class GeoPHP_EWKTParser
 			// Parse SRID=nnnn
 			if (!$allow_srid)
 			{
-				throw new GeoPHP_EWKTFormatError('SRID not allowed here');
+				throw new EWKTFormatError('SRID not allowed here');
 			}
 			if ($this->tokenizer->get_next_token() != '=')
 			{
-				throw new GeoPHP_EWKTFormatError('Invalid SRID expression');
+				throw new EWKTFormatError('Invalid SRID expression');
 			}
 			
 			$this->srid = intval($this->tokenizer->get_next_token());
 			if ($this->tokenizer->get_next_token() != ';')
 			{
-				throw new GeoPHP_EWKTFormatError('Invalid SRID separator');
+				throw new EWKTFormatError('Invalid SRID separator');
 			}
 			
 			$type = $this->tokenizer->get_next_token();
 		}
 		else
 		{
-			$this->srid = $this->srid?$this->srid:GeoPHP::DEFAULT_SRID;
+			$this->srid = $this->srid ? $this->srid : DEFAULT_SRID;
 			$type = $token;
 		}
 		
@@ -76,7 +75,7 @@ class GeoPHP_EWKTParser
 		}
 		else
 		{
-			throw new GeoPHP_EWKTFormatError("Invalid geometry type: ".$type);
+			throw new EWKTFormatError("Invalid geometry type: ".$type);
 		}
  	}
  	
@@ -87,7 +86,7 @@ class GeoPHP_EWKTParser
  		
  		if ($x === null || $y === null)
  		{
- 			throw new GeoPHP_EWKTFormatError('Bad POINT format');
+ 			throw new EWKTFormatError('Bad POINT format');
  		}
  		
  		if ($this->is_3dm)
@@ -96,11 +95,11 @@ class GeoPHP_EWKTParser
  			
  			if ($m === null || $m == ',' || $m == ')')
  			{
- 				throw new GeoPHP_EWKTFormatError('m component expected but not found');
+ 				throw new EWKTFormatError('m component expected but not found');
  			}
  			else
  			{
- 				$point = GeoPHP_Point::from_xym(floatval($x), floatval($y), floatval($m), $this->srid);
+ 				$point = Point::from_xym(floatval($x), floatval($y), floatval($m), $this->srid);
  				$next = $this->tokenizer->get_next_token();
  			}
  		}
@@ -110,13 +109,13 @@ class GeoPHP_EWKTParser
  			
  			if ($z === null)
  			{
- 				throw new GeoPHP_EWKTFormatError('Incorrect termination of EWKT string');
+ 				throw new EWKTFormatError('Incorrect termination of EWKT string');
  			}
  			
  			if ($z == ',' || $z == ')')
  			{
  				// No Z value
- 				$point = GeoPHP_Point::from_xy(floatval($x), floatval($y), $this->srid);
+ 				$point = Point::from_xy(floatval($x), floatval($y), $this->srid);
  				$next = $z;
  			}
  			else
@@ -125,21 +124,21 @@ class GeoPHP_EWKTParser
 	 			
 	 			if ($m === null)
 	 			{
-	 				throw new GeoPHP_EWKTFormatError('Incorrect termination of EWKT string');
+	 				throw new EWKTFormatError('Incorrect termination of EWKT string');
 	 			}
 	 			
  				$this->with_z = true;
 	 			if ($m == ',' || $m == ')')
 	 			{
 	 				// 3dz
-	 				$point = GeoPHP_Point::from_xyz(floatval($x), floatval($y), floatval($z), $this->srid);
+	 				$point = Point::from_xyz(floatval($x), floatval($y), floatval($z), $this->srid);
 	 				$next = $m;
 	 			}
 	 			else
 	 			{
 	 				// 4d
 	 				$this->with_m = true; 
-	 				$point = GeoPHP_Point::from_xyzm(floatval($x), floatval($y), floatval($z), floatval($m), $this->srid);
+	 				$point = Point::from_xyzm(floatval($x), floatval($y), floatval($z), floatval($m), $this->srid);
 	 				$next = $this->tokenizer->get_next_token();
 	 			}
  			}
@@ -152,14 +151,14 @@ class GeoPHP_EWKTParser
  	{
  		if ($this->tokenizer->get_next_token() != '(')
  		{
- 			throw new GeoPHP_EWKTFormatError('Invalid POINT');
+ 			throw new EWKTFormatError('Invalid POINT');
  		}
  		
  		list($token, $point) = $this->parse_coords();
  		
  		if ($token != ')')
  		{
- 			throw new GeoPHP_EWKTFormatError('Incorrect termination of EWKT string');
+ 			throw new EWKTFormatError('Incorrect termination of EWKT string');
  		}
  		
  		return $point;
@@ -169,27 +168,27 @@ class GeoPHP_EWKTParser
  	{
  		if ($this->tokenizer->get_next_token() != '(')
  		{
- 			throw new GeoPHP_EWKTFormatError('Invalid LINESTRING');
+ 			throw new EWKTFormatError('Invalid LINESTRING');
  		}
 
- 		return $this->parse_point_list('GeoPHP_LineString');
+ 		return $this->parse_point_list('LineString');
  	}
  	
  	private function parse_linear_ring()
  	{
  		if ($this->tokenizer->get_next_token() != '(')
  		{
- 			throw new GeoPHP_EWKTFormatError('Invalid Linear Ring');
+ 			throw new EWKTFormatError('Invalid Linear Ring');
  		}
 
- 		return $this->parse_point_list('GeoPHP_LinearRing');
+ 		return $this->parse_point_list('LinearRing');
  	}
  	
  	private function parse_polygon()
  	{
  		if ($this->tokenizer->get_next_token() != '(')
  		{
- 			throw new GeoPHP_EWKTFormatError('Invalid POLYGON');
+ 			throw new EWKTFormatError('Invalid POLYGON');
  		}
  		
  		$token = '';
@@ -200,11 +199,11 @@ class GeoPHP_EWKTParser
  			$token = $this->tokenizer->get_next_token(); // comma
  			if ($token === null)
  			{
- 				throw new GeoPHP_EWKTFormatError('Incorrect termination of EWKT string');
+ 				throw new EWKTFormatError('Incorrect termination of EWKT string');
  			}
  		}
  		
- 		return GeoPHP_Polygon::from_linear_rings($rings, $this->srid, $this->with_z, $this->with_m);
+ 		return Polygon::from_linear_rings($rings, $this->srid, $this->with_z, $this->with_m);
  	}
  	
 	/**
@@ -215,7 +214,7 @@ class GeoPHP_EWKTParser
  	{
  		if ($this->tokenizer->get_next_token() != '(')
  		{
- 			throw new GeoPHP_EWKTFormatError('Invalid MULTIPOINT');
+ 			throw new EWKTFormatError('Invalid MULTIPOINT');
  		}
 
 		$token = $this->tokenizer->check_next_token();
@@ -230,16 +229,16 @@ class GeoPHP_EWKTParser
 	 			$token = $this->tokenizer->get_next_token(); // comma
 	 			if ($token === null)
 	 			{
-	 				throw new GeoPHP_EWKTFormatError('Incorrect termination of EWKT string');
+	 				throw new EWKTFormatError('Incorrect termination of EWKT string');
 	 			}
 	 		}
 	 		
-	 		return GeoPHP_MultiPoint::from_points($points, $this->srid, $this->with_z, $this->with_m);
+	 		return MultiPoint::from_points($points, $this->srid, $this->with_z, $this->with_m);
 		}
 		else
 		{
 			// PostGIS format
-			return $this->parse_point_list('GeoPHP_MultiPoint');
+			return $this->parse_point_list('MultiPoint');
 		}
  	}
  	
@@ -247,7 +246,7 @@ class GeoPHP_EWKTParser
  	{
  		if ($this->tokenizer->get_next_token() != '(')
  		{
- 			throw new GeoPHP_EWKTFormatError('Invalid MULTILINESTRING');
+ 			throw new EWKTFormatError('Invalid MULTILINESTRING');
  		}
  		
  		$token = '';
@@ -258,18 +257,18 @@ class GeoPHP_EWKTParser
  			$token = $this->tokenizer->get_next_token(); // comma
  			if ($token === null)
  			{
- 				throw new GeoPHP_EWKTFormatError('Incorrect termination of EWKT string');
+ 				throw new EWKTFormatError('Incorrect termination of EWKT string');
  			}
  		}
  		
- 		return GeoPHP_MultiLineString::from_line_strings($lines, $this->srid, $this->with_z, $this->with_m);
+ 		return MultiLineString::from_line_strings($lines, $this->srid, $this->with_z, $this->with_m);
  	}
  	
  	private function parse_multi_polygon()
  	{
  		if ($this->tokenizer->get_next_token() != '(')
  		{
- 			throw new GeoPHP_EWKTFormatError('Invalid MULTIPOLYGON');
+ 			throw new EWKTFormatError('Invalid MULTIPOLYGON');
  		}
  		
  		$token = '';
@@ -280,18 +279,18 @@ class GeoPHP_EWKTParser
  			$token = $this->tokenizer->get_next_token(); // comma
  			if ($token === null)
  			{
- 				throw new GeoPHP_EWKTFormatError('Incorrect termination of EWKT string');
+ 				throw new EWKTFormatError('Incorrect termination of EWKT string');
  			}
  		}
  		
- 		return GeoPHP_MultiPolygon::from_polygons($polys, $this->srid, $this->with_z, $this->with_m);
+ 		return MultiPolygon::from_polygons($polys, $this->srid, $this->with_z, $this->with_m);
  	}
  	
  	private function parse_geometry_collection()
  	{
  		if ($this->tokenizer->get_next_token() != '(')
  		{
- 			throw new GeoPHP_EWKTFormatError('Invalid GEOMETRYCOLLECTION');
+ 			throw new EWKTFormatError('Invalid GEOMETRYCOLLECTION');
  		}
  		
  		$token = '';
@@ -302,11 +301,11 @@ class GeoPHP_EWKTParser
  			$token = $this->tokenizer->get_next_token(); // comma
  			if ($token === null)
  			{
- 				throw new GeoPHP_EWKTFormatError('Incorrect termination of EWKT string');
+ 				throw new EWKTFormatError('Incorrect termination of EWKT string');
  			}
  		}
  		
- 		return GeoPHP_GeometryCollection::from_geometries($geoms, $this->srid, $this->with_z, $this->with_m);
+ 		return GeometryCollection::from_geometries($geoms, $this->srid, $this->with_z, $this->with_m);
  	}
 
  	private function parse_point_list($type)
@@ -319,11 +318,11 @@ class GeoPHP_EWKTParser
  			list($token, $points[]) = $this->parse_coords();
  			if ($token === null)
  			{
- 				throw new GeoPHP_EWKTFormatError('Incorrect termination of EWKT string');
+ 				throw new EWKTFormatError('Incorrect termination of EWKT string');
  			}
  		}
 
- 		return call_user_func(array($type, 'from_points'), $points, $this->srid, $this->with_z, $this->with_m);
+ 		return call_user_func(array(__NAMESPACE__.'\\'.$type, 'from_points'), $points, $this->srid, $this->with_z, $this->with_m);
  	}
 }
 ?>

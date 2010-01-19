@@ -1,8 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/../GeoPHP.php';
-require_once dirname(__FILE__).'/EWKBUnpacker.php';
+namespace GeoPHP;
 
-class GeoPHP_EWKBParser
+class EWKBParser
 {
  	private $type_map = array(
 		1 => 'point',
@@ -20,7 +19,7 @@ class GeoPHP_EWKBParser
  	
  	public function parse($ewkb)
  	{
- 		$this->unpacker = new GeoPHP_EWKBUnpacker($ewkb);
+ 		$this->unpacker = new EWKBUnpacker($ewkb);
  		$this->srid = null;
  		$this->with_z = null;
  		$this->with_m = null;
@@ -34,27 +33,27 @@ class GeoPHP_EWKBParser
 		$this->unpacker->set_endianness($this->unpacker->read_byte());
 		$type = $this->unpacker->read_uint();
 		
-		if ($type & GeoPHP::Z_MASK)
+		if ($type & Z_MASK)
 		{
 			$this->with_z = true;
-			$type = ($type & ~GeoPHP::Z_MASK);
+			$type = ($type & ~Z_MASK);
 		}
 		
-		if ($type & GeoPHP::M_MASK)
+		if ($type & M_MASK)
 		{
 			$this->with_m = true;
-			$type = ($type & ~GeoPHP::M_MASK);
+			$type = ($type & ~M_MASK);
 		}
 		
-		if ($type & GeoPHP::SRID_MASK)
+		if ($type & SRID_MASK)
 		{
 			$this->srid = $this->unpacker->read_uint();
-			$type = $type & ~GeoPHP::SRID_MASK;
+			$type = $type & ~SRID_MASK;
 		}
 		elseif (!$this->srid)
 		{
 			// SRID is not present in parts of multi geometries, so use the parent
-			$this->srid = GeoPHP::DEFAULT_SRID;
+			$this->srid = DEFAULT_SRID;
 		}
 		
 		if ($this->type_map[$type])
@@ -64,7 +63,7 @@ class GeoPHP_EWKBParser
 		}
 		else
 		{
-			throw new GeoPHP_EWKBFormatError("Invalid geometry type");
+			throw new EWKBFormatError("Invalid geometry type");
 		}
  	}
  	
@@ -74,34 +73,34 @@ class GeoPHP_EWKBParser
  		$y = $this->unpacker->read_double();
  		if (!$this->with_z && !$this->with_m)
  		{
- 			return GeoPHP_Point::from_xy($x, $y, $this->srid);
+ 			return Point::from_xy($x, $y, $this->srid);
  		}
  		elseif ($this->with_z && $this->with_m)
  		{
  			$z = $this->unpacker->read_double();
  			$m = $this->unpacker->read_double();
- 			return GeoPHP_Point::from_xyzm($x, $y, $z, $m, $this->srid);
+ 			return Point::from_xyzm($x, $y, $z, $m, $this->srid);
  		}
  		elseif ($this->with_z)
  		{
  			$z = $this->unpacker->read_double();
- 			return GeoPHP_Point::from_xyz($x, $y, $z, $this->srid);
+ 			return Point::from_xyz($x, $y, $z, $this->srid);
  		}
  		else // with_m
  		{
  			$m = $this->unpacker->read_double();
- 			return GeoPHP_Point::from_xym($x, $y, $m, $this->srid);
+ 			return Point::from_xym($x, $y, $m, $this->srid);
  		}
  	}
  	
  	private function parse_line_string()
  	{
- 		return $this->parse_point_list('GeoPHP_LineString');
+ 		return $this->parse_point_list('LineString');
  	}
  	
  	private function parse_linear_ring()
  	{
- 		return $this->parse_point_list('GeoPHP_LinearRing');
+ 		return $this->parse_point_list('LinearRing');
  	}
  	
  	private function parse_polygon()
@@ -113,27 +112,27 @@ class GeoPHP_EWKBParser
  			$rings[] = $this->parse_linear_ring();
  		}
  		
- 		return GeoPHP_Polygon::from_linear_rings($rings, $this->srid, $this->with_z, $this->with_m);
+ 		return Polygon::from_linear_rings($rings, $this->srid, $this->with_z, $this->with_m);
  	}
  	
  	private function parse_multi_point()
  	{
- 		return $this->parse_multi_geometries('GeoPHP_MultiPoint');
+ 		return $this->parse_multi_geometries('MultiPoint');
  	}
  	
  	private function parse_multi_line_string()
  	{
- 		return $this->parse_multi_geometries('GeoPHP_MultiLineString');
+ 		return $this->parse_multi_geometries('MultiLineString');
  	}
  	
  	private function parse_multi_polygon()
  	{
- 		return $this->parse_multi_geometries('GeoPHP_MultiPolygon');
+ 		return $this->parse_multi_geometries('MultiPolygon');
  	}
  	
  	private function parse_geometry_collection()
  	{
- 		return $this->parse_multi_geometries('GeoPHP_GeometryCollection');
+ 		return $this->parse_multi_geometries('GeometryCollection');
  	}
 
  	private function parse_multi_geometries($type)
@@ -145,7 +144,7 @@ class GeoPHP_EWKBParser
  			$geoms[] = $this->parse_geometry();
  		}
  		
- 		return call_user_func(array($type, 'from_geometries'), $geoms, $this->srid, $this->with_z, $this->with_m);
+ 		return call_user_func(array(__NAMESPACE__.'\\'.$type, 'from_geometries'), $geoms, $this->srid, $this->with_z, $this->with_m);
  	}
  	
  	private function parse_point_list($type)
@@ -157,7 +156,7 @@ class GeoPHP_EWKBParser
  			$points[] = $this->parse_point();
  		}
  		
- 		return call_user_func(array($type, 'from_points'), $points, $this->srid, $this->with_z, $this->with_m);
+ 		return call_user_func(array(__NAMESPACE__.'\\'.$type, 'from_points'), $points, $this->srid, $this->with_z, $this->with_m);
  	}
 }
 ?>

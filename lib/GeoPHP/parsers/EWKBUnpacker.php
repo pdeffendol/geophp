@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/EWKBFormatError.php';
+namespace GeoPHP;
 
-class GeoPHP_EWKBUnpacker
+class EWKBUnpacker
 {
 	const NDR = 1;
 	const XDR = 0;
@@ -25,7 +25,7 @@ class GeoPHP_EWKBUnpacker
         $packed_double = substr($this->ewkb, $i, 8);
         if (!$packed_double || strlen($packed_double) < 8)
         {
-        	throw new GeoPHP_EWKBFormatError("Truncated data");
+        	throw new EWKBFormatError("Truncated data");
         }
         
         return current(unpack($this->double_marker."value", $packed_double));
@@ -38,7 +38,7 @@ class GeoPHP_EWKBUnpacker
         $packed_uint = substr($this->ewkb, $i, 4);
         if (!$packed_uint || strlen($packed_uint) < 4)
         {
-        	throw new GeoPHP_EWKBFormatError("Truncated data");
+        	throw new EWKBFormatError("Truncated data");
         }
         
         return current(unpack($this->uint_marker."value", $packed_uint));
@@ -51,7 +51,7 @@ class GeoPHP_EWKBUnpacker
         $packed_byte = substr($this->ewkb, $i, 1);
         if ($packed_byte === null || strlen($packed_byte) < 1)
         {
-        	throw new GeoPHP_EWKBFormatError("Truncated data");
+        	throw new EWKBFormatError("Truncated data");
         }
         
         return current(unpack("Cvalue", $packed_byte));
@@ -75,7 +75,7 @@ class GeoPHP_EWKBUnpacker
 	{
 		if ($this->position != strlen($this->ewkb))
 		{
-			throw new GeoPHP_EWKBFormatError('Trailing data (read '.$this->position.' bytes, have '.strlen($this->ewkb).')');
+			throw new EWKBFormatError('Trailing data (read '.$this->position.' bytes, have '.strlen($this->ewkb).')');
 		}
 	}
 }

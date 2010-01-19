@@ -1,22 +1,54 @@
 <?php
-require_once dirname(__FILE__).'/features/Envelope.php';
-require_once dirname(__FILE__).'/features/Point.php';
-require_once dirname(__FILE__).'/features/LineString.php';
-require_once dirname(__FILE__).'/features/LinearRing.php';
-require_once dirname(__FILE__).'/features/Polygon.php';
-require_once dirname(__FILE__).'/features/GeometryCollection.php';
-require_once dirname(__FILE__).'/features/MultiPoint.php';
-require_once dirname(__FILE__).'/features/MultiLineString.php';
-require_once dirname(__FILE__).'/features/MultiPolygon.php';
-require_once dirname(__FILE__).'/parsers/HexEWKBParser.php';
-require_once dirname(__FILE__).'/parsers/EWKTParser.php';
+namespace GeoPHP;
 
-abstract class GeoPHP
+const Z_MASK = 0x80000000;
+const M_MASK = 0x40000000;
+const SRID_MASK = 0x20000000;
+
+const DEFAULT_SRID = -1;
+
+/**
+ * Colon-separated list of folders to search.
+ * 
+ * Paths are relative to the folder containing this file.
+ */
+const LOAD_PATH = 'GeoPHP:GeoPHP/features:GeoPHP/parsers:GeoPHP/geocoders';
+
+register_autoloader();
+
+function register_autoloader()
 {
-	const Z_MASK = 0x80000000;
-	const M_MASK = 0x40000000;
-	const SRID_MASK = 0x20000000;
+  if (!$callbacks = spl_autoload_functions())
+  {
+    $callbacks = array();
+  }
+  foreach ($callbacks as $callback)
+  {
+    spl_autoload_unregister($callback);
+  }
+  spl_autoload_register(__NAMESPACE__.'\autoload');
+  foreach ($callbacks as $callback)
+  {
+    spl_autoload_register($callback);
+  }
+}
 
-	const DEFAULT_SRID = -1;
+function autoload($class)
+{
+	if (!preg_match('#^\\\\?'.__NAMESPACE__.'\\\\(.*)#', $class, $matches))
+	{
+    return;
+  }
+	$namespaced_class = $matches[1];
+	
+	foreach (explode(':', LOAD_PATH) as $path)
+	{
+	  $full_path = dirname(__FILE__) . '/' . $path . '/' . $namespaced_class . '.php';
+	  if (file_exists($full_path))
+	  {
+	    require_once $full_path;
+			return;
+	  }
+	}
 }
 ?>

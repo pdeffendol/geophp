@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/EWKTFormatError.php';
+namespace GeoPHP;
 
-class GeoPHP_EWKTTokenizer
+class EWKTTokenizer
 {
 	private $ewkt;
 	private $pos;
@@ -76,7 +76,7 @@ class GeoPHP_EWKTTokenizer
 	{
 		if (!$this->eos())
 		{
-			throw new GeoPHP_EWKTFormatError('Trailing data');
+			throw new EWKTFormatError('Trailing data');
 		}
 	}
 	

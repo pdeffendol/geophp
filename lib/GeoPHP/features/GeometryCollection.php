@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/Geometry.php';
+namespace GeoPHP;
 
-class GeoPHP_GeometryCollection extends GeoPHP_Geometry
+class GeometryCollection extends Geometry
 {
 	public $geometries;
 	
@@ -35,8 +35,8 @@ class GeoPHP_GeometryCollection extends GeoPHP_Geometry
 				if ($ur->y > $max_y) $max_y = $ur->y;
 			}
 			return array(
-				GeoPHP_Point::from_xy($min_x, $min_y),
-				GeoPHP_Point::from_xy($max_x, $max_y)
+				Point::from_xy($min_x, $min_y),
+				Point::from_xy($max_x, $max_y)
 			);
 		}
 		else
@@ -58,8 +58,8 @@ class GeoPHP_GeometryCollection extends GeoPHP_Geometry
 				if ($ur->z > $max_z) $max_y = $ur->z;
 			}
 			return array(
-				GeoPHP_Point::from_xy($min_x, $min_y),
-				GeoPHP_Point::from_xy($max_x, $max_y)
+				Point::from_xy($min_x, $min_y),
+				Point::from_xy($max_x, $max_y)
 			);
 		}
 	}
@@ -81,7 +81,7 @@ class GeoPHP_GeometryCollection extends GeoPHP_Geometry
 
 	public static function from_geometries($geometries, $srid = null, $with_z = false, $with_m = false)
 	{
-		$coll = new GeoPHP_GeometryCollection($srid, $with_z, $with_m);
+		$coll = new GeometryCollection($srid, $with_z, $with_m);
 		$coll->geometries = $geometries;
 		return $coll;
 	}

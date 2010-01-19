@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/Geometry.php';
+namespace GeoPHP;
 
-class GeoPHP_MultiLineString extends GeoPHP_GeometryCollection
+class MultiLineString extends GeometryCollection
 {
 	public function __construct($srid = null, $with_z = false, $with_m = false)
 	{
@@ -42,17 +42,17 @@ class GeoPHP_MultiLineString extends GeoPHP_GeometryCollection
 	
 	public static function from_geometries($geometries, $srid = null, $with_z = false, $with_m = false)
 	{
-		$coll = new GeoPHP_MultiLineString($srid, $with_z, $with_m);
+		$coll = new MultiLineString($srid, $with_z, $with_m);
 		$coll->geometries = $geometries;
 		return $coll;
 	}
 	
 	public static function from_array($point_sets, $srid = null, $with_z = false, $with_m = false)
 	{
-		$ml = new GeoPHP_MultiLineString($srid, $with_z, $with_m);
+		$ml = new MultiLineString($srid, $with_z, $with_m);
 		foreach ($point_sets as $set)
 		{
-			$ml->geometries[] = GeoPHP_Linestring::from_array($set, $srid, $with_z, $with_m);
+			$ml->geometries[] = Linestring::from_array($set, $srid, $with_z, $with_m);
 		}
 		return $ml;
 	}

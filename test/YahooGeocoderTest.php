@@ -1,24 +1,26 @@
 <?php
+namespace GeoPHP;
+
 require_once 'PHPUnit/Framework.php';
-require_once dirname(__FILE__).'/../lib/geocoders/YahooGeocoder.php';
 require_once dirname(__FILE__).'/../lib/GeoPHP.php';
 
-class YahooGeocoderTest extends PHPUnit_Framework_TestCase
+class YahooGeocoderTest extends \PHPUnit_Framework_TestCase
 {
 
 	public function test01_locate()
 	{
 		// Test with no options and empty location string.
-		$this->setExpectedException('GeoPhp_YahooGeocoderError');
-		$coder = new GeoPHP_YahooGeocoder("djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--");
+		$this->setExpectedException(__NAMESPACE__.'\\YahooGeocoderError');
+		$coder = new YahooGeocoder("djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--");
 		$result = $coder->locate("");
 	}
 
 	public function test02_locate()
 	{
 		// Test with no options and good location string.
-		$coder = new GeoPHP_YahooGeocoder("djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--");
+		$coder = new YahooGeocoder("djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--");
 		$result = $coder->locate("84321");
+		print_r($result);
 		$this->assertNotNull($result);
 		$this->assertTrue(is_array($result));
 		$this->assertEquals(1,count($result));
@@ -28,7 +30,7 @@ class YahooGeocoderTest extends PHPUnit_Framework_TestCase
 	public function test03_locate()
 	{
 		// Test with no options and good location string.
-		$coder = new GeoPHP_YahooGeocoder("djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--");
+		$coder = new YahooGeocoder("djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--");
 		$result = $coder->locate("logan");
 
 		$this->assertNotNull($result);
@@ -39,7 +41,7 @@ class YahooGeocoderTest extends PHPUnit_Framework_TestCase
 	{
 		// Test with cache option provided and good location string.
 		$flle_path = dirname(__FILE__)."/YahooCache";
-		$coder = new GeoPHP_YahooGeocoder("djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--",array("cache" => $flle_path));
+		$coder = new YahooGeocoder("djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--",array("cache" => $flle_path));
 
 		$file_name = $flle_path."/".md5("76209");
 		if (file_exists($file_name))
@@ -57,7 +59,7 @@ class YahooGeocoderTest extends PHPUnit_Framework_TestCase
 	{
 		// Test with cache option provided and good location string.
 		$flle_path = dirname(__FILE__)."/YahooCache";
-		$coder = new GeoPHP_YahooGeocoder("djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--",array("cache" => $flle_path));
+		$coder = new YahooGeocoder("djDozJ3V34HKPgWv.x_r0VhcywuZZdDAmWVcDafuhWb074C434xjhxAm_XNoXOGrGw--",array("cache" => $flle_path));
 
 		$file_name = $flle_path."/".md5("84321");
 

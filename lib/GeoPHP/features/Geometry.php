@@ -1,5 +1,7 @@
 <?php
-abstract class GeoPHP_Geometry
+namespace GeoPHP;
+
+abstract class Geometry
 {
 	/**
 	 * SRID of the data
@@ -28,7 +30,7 @@ abstract class GeoPHP_Geometry
 	
 	public function __construct($srid = null, $with_z = false, $with_m = false)
 	{
-		$this->srid = $srid===null?GeoPHP::DEFAULT_SRID:$srid;
+		$this->srid = $srid === null ? DEFAULT_SRID : $srid;
 		$this->with_z = $with_z;
 		$this->with_m = $with_m;
 	}
@@ -46,7 +48,7 @@ abstract class GeoPHP_Geometry
 	 */
 	public function extent()
 	{
-		return GeoPHP_Envelope::from_points($this->bounding_box(), $this->srid, $this->with_z);		
+		return Envelope::from_points($this->bounding_box(), $this->srid, $this->with_z);		
 	}
 	
 	public function envelope()
@@ -63,15 +65,15 @@ abstract class GeoPHP_Geometry
 		$type = $this->binary_type;
 		if ($this->with_z && $allow_z)
 		{
-			$type |= GeoPHP::Z_MASK;
+			$type |= Z_MASK;
 		}
 		if ($this->with_m && $allow_m)
 		{
-			$type |= GeoPHP::M_MASK;
+			$type |= M_MASK;
 		}
-		if ($this->srid != GeoPHP::DEFAULT_SRID && $allow_srid)
+		if ($this->srid != DEFAULT_SRID && $allow_srid)
 		{
-			$type |= GeoPHP::SRID_MASK;
+			$type |= SRID_MASK;
 			$ewkb .= pack('VV', $type, $this->srid);
 		}
 		else
@@ -102,7 +104,7 @@ abstract class GeoPHP_Geometry
 	public function to_ewkt($allow_srid = true, $allow_z = true, $allow_m = true)
 	{
 		$ewkt = '';
-		if ($this->srid != GeoPHP::DEFAULT_SRID && $allow_srid)
+		if ($this->srid != DEFAULT_SRID && $allow_srid)
 		{
 			$ewkt = 'SRID='.$this->srid.';';
 		}			
@@ -125,19 +127,19 @@ abstract class GeoPHP_Geometry
 	
 	public static function from_ewkt($ewkt)
 	{
-		$parser = new GeoPHP_EWKTParser;
+		$parser = new EWKTParser;
 		return $parser->parse($ewkt);
 	}
 	
 	public static function from_ewkb($ewkb)
 	{
-		$parser = new GeoPHP_EWKBParser;
+		$parser = new EWKBParser;
 		return $parser->parse($ewkb);
 	}
 	
 	public static function from_hexewkb($hexewkb)
 	{
-		$parser = new GeoPHP_HexEWKBParser;
+		$parser = new HexEWKBParser;
 		return $parser->parse($hexewkb);
 	}
 }

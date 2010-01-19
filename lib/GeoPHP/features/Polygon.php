@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/Geometry.php';
+namespace GeoPHP;
 
-class GeoPHP_Polygon extends GeoPHP_Geometry
+class Polygon extends Geometry
 {
 	public $rings;
 	
@@ -58,17 +58,17 @@ class GeoPHP_Polygon extends GeoPHP_Geometry
 
 	public static function from_linear_rings($rings, $srid = null, $with_z = false, $with_m = false)
 	{
-		$poly = new GeoPHP_Polygon($srid, $with_z, $with_m);
+		$poly = new Polygon($srid, $with_z, $with_m);
 		$poly->rings = $rings;
 		return $poly;
 	}
 
 	public static function from_array($point_sets, $srid = null, $with_z = false, $with_m = false)
 	{
-		$poly = new GeoPHP_Polygon($srid, $with_z, $with_m);
+		$poly = new Polygon($srid, $with_z, $with_m);
 		foreach ($point_sets as $set)
 		{
-			$poly->rings[] = GeoPHP_LinearRing::from_array($set, $srid, $with_z, $with_m);
+			$poly->rings[] = LinearRing::from_array($set, $srid, $with_z, $with_m);
 		}
 		return $poly;
 	}

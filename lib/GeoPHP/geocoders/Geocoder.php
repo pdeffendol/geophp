@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/../GeoPHP.php';
+namespace GeoPHP;
 
-abstract class GeoPHP_Geocoder
+abstract class Geocoder
 {
 	protected $options;
 	function __construct($options = null)
