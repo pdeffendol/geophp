@@ -1,7 +1,6 @@
 <?php
 namespace GeoPHP;
 
-require_once 'PHPUnit/Framework.php';
 require_once dirname(__FILE__).'/../lib/GeoPHP.php';
 
 class EWKBParserTest extends \PHPUnit_Framework_TestCase
