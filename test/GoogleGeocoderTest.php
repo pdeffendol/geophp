@@ -22,7 +22,7 @@ class GoogleGeocoderTest extends \PHPUnit_Framework_TestCase
 		$this->assertNotNull($result);
 		$this->assertTrue(is_array($result));
 		$this->assertEquals(1,count($result));
-		$this->assertEquals(41.684168, $result[0]['coordinates']->x);
+		$this->assertEquals(41.7131433, $result[0]['coordinates']->x);
 	}
 
 	public function test03_locate()
@@ -32,7 +32,7 @@ class GoogleGeocoderTest extends \PHPUnit_Framework_TestCase
 		$result = $coder->locate("logan");
 
 		$this->assertNotNull($result);
-		$this->assertTrue(count($result)>1);
+		$this->assertTrue(count($result) == 1);
 	}
 
 	public function test04_locate()
