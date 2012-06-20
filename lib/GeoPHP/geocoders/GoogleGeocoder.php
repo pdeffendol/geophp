@@ -70,13 +70,16 @@ class GoogleGeocoder extends Geocoder
 
 			$output['coordinates'] = $p;
 			$output['address'] = $result['address'];
-			if ($result['addressdetails']['Country']['AdministrativeArea']['Locality'])
+			if (isset($result['addressdetails']['Country']['AdministrativeArea']['Locality']))
 				$output['city'] = $result['addressdetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
 			else
 				$output['city'] = $result['addressdetails']['Country']['AdministrativeArea']['SubAdministrativeArea']['SubAdministrativeAreaName'];
 
 			$output['state'] = $result['addressdetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
-			$output['zip'] = $result['addressdetails']['Country']['AdministrativeArea']['Locality']['PostalCode']['PostalCodeNumber'];
+			if (isset($result['addressdetails']['Country']['AdministrativeArea']['Locality']['PostalCode']['PostalCodeNumber']))
+			{
+				$output['zip'] = $result['addressdetails']['Country']['AdministrativeArea']['Locality']['PostalCode']['PostalCodeNumber'];
+			}
 			$output['country'] = $result['addressdetails']['Country']['CountryNameCode'];
 			$location_details[] = $output;
 		}

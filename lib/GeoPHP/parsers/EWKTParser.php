@@ -68,7 +68,7 @@ class EWKTParser
 			$type = substr($type, 0, -1);
 		}
 		
-		if ($this->type_map[$type])
+		if (isset($this->type_map[$type]))
 		{
 			$func = "parse_".$this->type_map[$type];
 			return $this->$func();
