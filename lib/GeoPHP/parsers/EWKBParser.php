@@ -56,7 +56,7 @@ class EWKBParser
 			$this->srid = DEFAULT_SRID;
 		}
 		
-		if ($this->type_map[$type])
+		if (isset($this->type_map[$type]))
 		{
 			$func = "parse_".$this->type_map[$type];
 			return $this->$func();
