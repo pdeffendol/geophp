@@ -7,7 +7,7 @@ class EWKBUnpacker
 	const XDR = 0;
 	
 	private $ewkb;
-	private $pos;
+	private $position;
 	
 	private $uint_marker;
 	private $double_marker;
@@ -15,7 +15,7 @@ class EWKBUnpacker
 	public function __construct($ewkb)
 	{
 		$this->ewkb = $ewkb;
-		$this->pos = 0;				
+		$this->position = 0;				
 	}
 	
 	public function read_double()
