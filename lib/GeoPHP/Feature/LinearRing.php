@@ -23,4 +23,3 @@ class LinearRing extends LineString
         return $line;
     }
 }
-?>

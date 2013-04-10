@@ -57,4 +57,3 @@ class MultiLineString extends GeometryCollection
         return $ml;
     }
 }
-?>

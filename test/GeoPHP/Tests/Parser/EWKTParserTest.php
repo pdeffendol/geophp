@@ -303,4 +303,3 @@ class EWKTParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($coll->geometries[0]->with_m);
     }
 }
-?>

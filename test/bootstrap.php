@@ -12,4 +12,3 @@ EOT
 }
 
 $loader->add('GeoPHP\Tests', __DIR__);
-?>

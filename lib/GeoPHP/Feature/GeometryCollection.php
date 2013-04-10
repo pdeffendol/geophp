@@ -86,4 +86,3 @@ class GeometryCollection extends Geometry
         return $coll;
     }
 }
-?>

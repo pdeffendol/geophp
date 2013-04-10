@@ -57,4 +57,3 @@ class MultiPoint extends GeometryCollection
         return $mp;
     }
 }
-?>

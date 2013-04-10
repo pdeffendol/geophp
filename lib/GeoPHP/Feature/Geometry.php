@@ -145,4 +145,3 @@ abstract class Geometry
         return $parser->parse($hexewkb);
     }
 }
-?>

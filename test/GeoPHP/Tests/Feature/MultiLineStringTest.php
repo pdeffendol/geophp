@@ -92,4 +92,3 @@ class MultiLineStringTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('SRID=444;MULTILINESTRING((0 0 0 4,0 5 1 3,5 5 2 2,5 0 1 1,0 0 0 4),(1 1 0 -2,1 4 1 -3,4 4 2 -4,4 1 1 -5,1 1 0 -2))', $ml->to_ewkt());
   }
 }
-?>

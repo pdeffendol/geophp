@@ -112,4 +112,3 @@ class MultiPolygonTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('SRID=444;MULTIPOLYGON(((0 0 0 4,0 5 1 3,5 5 2 2,5 0 1 1,0 0 0 4),(1 1 0 4,1 4 1 3,4 4 2 2,4 1 1 1,1 1 0 4)),((6 6 0 4,6 10 1 3,10 10 2 2,10 6 1 1,6 6 0 4)))', $mp->to_ewkt());
   }
 }
-?>

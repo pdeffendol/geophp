@@ -57,4 +57,3 @@ class MultiPolygon extends GeometryCollection
         return $mp;
     }
 }
-?>

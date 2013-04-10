@@ -85,4 +85,3 @@ class EWKTTokenizer
         return $this->pos == strlen($this->ewkt);
     }
 }
-?>

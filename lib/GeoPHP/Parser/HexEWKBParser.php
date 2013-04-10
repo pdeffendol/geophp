@@ -19,4 +19,3 @@ class HexEWKBParser extends EWKBParser
         return parent::parse($this->decode_hex($hexewkb));
     }
 }
-?>

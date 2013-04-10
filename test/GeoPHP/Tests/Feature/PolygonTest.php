@@ -82,4 +82,3 @@ class PolygonTest extends \PHPUnit_Framework_TestCase
   }
 
 }
-?>

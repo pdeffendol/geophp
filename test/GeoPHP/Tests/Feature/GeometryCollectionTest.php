@@ -41,4 +41,3 @@
 //     $this->assertEquals('SRID=444;GEOMETRYCOLLECTIONM(POINTM(4 -5 3),LINESTRINGM(1.1 2.2 3,3.3 4.4 3))', $coll->to_ewkt());
 //   }
 // }
-?>

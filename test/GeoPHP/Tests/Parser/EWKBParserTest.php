@@ -287,4 +287,3 @@ class EWKBParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(GeometryCollection::from_geometries(array(Point::from_xym(4, -5, 3, 444), LineString::from_array(array(array(1.1, 2.2, 3), array(3.3, 4.4, 3)), 444, false, true)), 444, false, true), $coll);
     }
 }
-?>

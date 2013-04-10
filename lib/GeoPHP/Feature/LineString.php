@@ -88,4 +88,3 @@ class LineString extends Geometry
         return $line;
     }
 }
-?>

@@ -5,4 +5,3 @@ class EWKTFormatError extends \Exception
 {
 
 }
-?>

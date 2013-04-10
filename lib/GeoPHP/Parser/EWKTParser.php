@@ -334,4 +334,3 @@ class EWKTParser
          return call_user_func(array('GeoPHP\\Feature\\'.$type, 'from_points'), $points, $this->srid, $this->with_z, $this->with_m);
      }
 }
-?>

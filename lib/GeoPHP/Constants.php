@@ -9,4 +9,3 @@ class Constants
 
   const DEFAULT_SRID = -1;
 }
-?>

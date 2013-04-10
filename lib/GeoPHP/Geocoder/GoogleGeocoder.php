@@ -156,4 +156,3 @@ class GoogleGeocoder extends AbstractGeocoder
         }
      }
 }
-?>

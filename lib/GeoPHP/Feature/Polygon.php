@@ -73,4 +73,3 @@ class Polygon extends Geometry
         return $poly;
     }
 }
-?>

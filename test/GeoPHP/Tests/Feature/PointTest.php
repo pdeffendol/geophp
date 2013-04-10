@@ -157,4 +157,3 @@ class PointTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals($p->y, $env->bottom);
   }
 }
-?>
