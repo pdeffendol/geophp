@@ -3,7 +3,6 @@ namespace GeoPHP\Tests\Geocoder;
 
 use GeoPHP\Geocoder\GoogleGeocoder;
 use GeoPHP\Geocoder\GoogleGeocoderError;
-use GeoPHP\Feature\Point;
 
 class GoogleGeocoderTest extends \PHPUnit_Framework_TestCase
 {
