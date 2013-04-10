@@ -42,14 +42,14 @@ class MultiPolygon extends GeometryCollection
 
 	public static function from_geometries($geometries, $srid = null, $with_z = false, $with_m = false)
 	{
-		$coll = new MultiPolygon($srid, $with_z, $with_m);
+		$coll = new self($srid, $with_z, $with_m);
 		$coll->geometries = $geometries;
 		return $coll;
 	}
 
 	public static function from_array($point_set_sets, $srid = null, $with_z = false, $with_m = false)
 	{
-		$mp = new MultiPolygon($srid, $with_z, $with_m);
+		$mp = new self($srid, $with_z, $with_m);
 		foreach ($point_set_sets as $point_set)
 		{
 			$mp->geometries[] = Polygon::from_array($point_set, $srid, $with_z, $with_m);

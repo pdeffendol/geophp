@@ -57,7 +57,7 @@ class Envelope
 	 */
 	public static function from_points($points, $srid = null, $with_z = false)
 	{
-		$e = new Envelope($srid, $with_z);
+		$e = new self($srid, $with_z);
 		list($e->ll, $e->ur) = $points;
 		return $e;
 	}
@@ -67,7 +67,7 @@ class Envelope
 	 */
 	public static function from_array($coords, $srid = null, $with_z = false)
 	{
-		$e = new Envelope($srid, $with_z);
+		$e = new self($srid, $with_z);
 		$e->ll = Point::from_array($coords[0], $srid, $with_z);
 		$e->ur = Point::from_array($coords[1], $srid, $with_z);
 		return $e;

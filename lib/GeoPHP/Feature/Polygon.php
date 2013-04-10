@@ -58,14 +58,14 @@ class Polygon extends Geometry
 
 	public static function from_linear_rings($rings, $srid = null, $with_z = false, $with_m = false)
 	{
-		$poly = new Polygon($srid, $with_z, $with_m);
+		$poly = new self($srid, $with_z, $with_m);
 		$poly->rings = $rings;
 		return $poly;
 	}
 
 	public static function from_array($point_sets, $srid = null, $with_z = false, $with_m = false)
 	{
-		$poly = new Polygon($srid, $with_z, $with_m);
+		$poly = new self($srid, $with_z, $with_m);
 		foreach ($point_sets as $set)
 		{
 			$poly->rings[] = LinearRing::from_array($set, $srid, $with_z, $with_m);

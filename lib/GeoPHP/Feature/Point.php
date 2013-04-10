@@ -65,15 +65,15 @@ class Point extends Geometry
 		if (!$this->with_z)
 		{
 			return array(
-				Point::from_xy($this->x, $this->y),
-				Point::from_xy($this->x, $this->y)
+				self::from_xy($this->x, $this->y),
+				self::from_xy($this->x, $this->y)
 			);
 		}
 		else
 		{
 			return array(
-				Point::from_xyz($this->x, $this->y, $this->z),
-				Point::from_xyz($this->x, $this->y, $this->z)
+				self::from_xyz($this->x, $this->y, $this->z),
+				self::from_xyz($this->x, $this->y, $this->z)
 			);
 		}
 	}
@@ -96,14 +96,14 @@ class Point extends Geometry
 	
 	public static function from_xy($x, $y, $srid = null)
 	{
-		$point = new Point($srid);
+		$point = new self($srid);
 		$point->set_xy($x, $y);
 		return $point;
 	}
 	
 	public static function from_xyz($x, $y, $z, $srid = null)
 	{
-		$point = new Point($srid, true);
+		$point = new self($srid, true);
 		$point->set_xyz($x, $y, $z);
 		return $point;
 	}
@@ -115,7 +115,7 @@ class Point extends Geometry
 	
 	public static function from_xym($x, $y, $m, $srid = null)
 	{
-		$point = new Point($srid, false, true);
+		$point = new self($srid, false, true);
 		$point->set_xy($x, $y);
 		$point->m = $m;
 		return $point;
@@ -123,7 +123,7 @@ class Point extends Geometry
 	
 	public static function from_xyzm($x, $y, $z, $m, $srid = null)
 	{
-		$point = new Point($srid, true, true);
+		$point = new self($srid, true, true);
 		$point->set_xyz($x, $y, $z);
 		$point->m = $m;
 		return $point;

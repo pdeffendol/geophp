@@ -42,14 +42,14 @@ class MultiPoint extends GeometryCollection
 
 	public static function from_geometries($geometries, $srid = null, $with_z = false, $with_m = false)
 	{
-		$coll = new MultiPoint($srid, $with_z, $with_m);
+		$coll = new self($srid, $with_z, $with_m);
 		$coll->geometries = $geometries;
 		return $coll;
 	}
 	
 	public static function from_array($points, $srid = null, $with_z = false, $with_m = false)
 	{
-		$mp = new MultiPoint($srid, $with_z, $with_m);
+		$mp = new self($srid, $with_z, $with_m);
 		foreach ($points as $point)
 		{
 			$mp->geometries[] = Point::from_array($point, $srid, $with_z, $with_m);
