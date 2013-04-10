@@ -21,11 +21,11 @@ class EWKBParser
         6 => 'multi_polygon',
         7 => 'geometry_collection'
          );
-     
+
      private $srid;
      private $with_z;
      private $with_m;
-     
+
      public function parse($ewkb)
      {
          $this->unpacker = new EWKBUnpacker($ewkb);
@@ -35,25 +35,25 @@ class EWKBParser
          $geom = $this->parse_geometry();
          $this->unpacker->done();
          return $geom;
-     }	
-     
+     }
+
      private function parse_geometry()
      {
         $this->unpacker->set_endianness($this->unpacker->read_byte());
         $type = $this->unpacker->read_uint();
-        
+
         if ($type & Constants::Z_MASK)
         {
             $this->with_z = true;
             $type = ($type & ~Constants::Z_MASK);
         }
-        
+
         if ($type & Constants::M_MASK)
         {
             $this->with_m = true;
             $type = ($type & ~Constants::M_MASK);
         }
-        
+
         if ($type & Constants::SRID_MASK)
         {
             $this->srid = $this->unpacker->read_uint();
@@ -64,7 +64,7 @@ class EWKBParser
             // SRID is not present in parts of multi geometries, so use the parent
             $this->srid = Constants::DEFAULT_SRID;
         }
-        
+
         if (isset($this->type_map[$type]))
         {
             $func = "parse_".$this->type_map[$type];
@@ -75,7 +75,7 @@ class EWKBParser
             throw new EWKBFormatError("Invalid geometry type");
         }
      }
-     
+
      private function parse_point()
      {
          $x = $this->unpacker->read_double();
@@ -101,17 +101,17 @@ class EWKBParser
              return Point::from_xym($x, $y, $m, $this->srid);
          }
      }
-     
+
      private function parse_line_string()
      {
          return $this->parse_point_list('LineString');
      }
-     
+
      private function parse_linear_ring()
      {
          return $this->parse_point_list('LinearRing');
      }
-     
+
      private function parse_polygon()
      {
          $num_rings = $this->unpacker->read_uint();
@@ -120,25 +120,25 @@ class EWKBParser
          {
              $rings[] = $this->parse_linear_ring();
          }
-         
+
          return Polygon::from_linear_rings($rings, $this->srid, $this->with_z, $this->with_m);
      }
-     
+
      private function parse_multi_point()
      {
          return $this->parse_multi_geometries('MultiPoint');
      }
-     
+
      private function parse_multi_line_string()
      {
          return $this->parse_multi_geometries('MultiLineString');
      }
-     
+
      private function parse_multi_polygon()
      {
          return $this->parse_multi_geometries('MultiPolygon');
      }
-     
+
      private function parse_geometry_collection()
      {
          return $this->parse_multi_geometries('GeometryCollection');
@@ -152,10 +152,10 @@ class EWKBParser
          {
              $geoms[] = $this->parse_geometry();
          }
-         
+
          return call_user_func(array('GeoPHP\\Feature\\'.$type, 'from_geometries'), $geoms, $this->srid, $this->with_z, $this->with_m);
      }
-     
+
      private function parse_point_list($type)
      {
          $num_points = $this->unpacker->read_uint();
@@ -164,7 +164,7 @@ class EWKBParser
          {
              $points[] = $this->parse_point();
          }
-         
+
          return call_user_func(array('GeoPHP\\Feature\\'.$type, 'from_points'), $points, $this->srid, $this->with_z, $this->with_m);
      }
 }

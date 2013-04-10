@@ -4,23 +4,23 @@ namespace GeoPHP\Feature;
 class LineString extends Geometry
 {
     public $points;
-    
+
     public function __construct($srid = null, $with_z = false, $with_m = false)
     {
         parent::__construct($srid, $with_z, $with_m);
         $this->binary_type = 2;
         $this->text_type = 'LINESTRING';
-        
+
         $this->points = array();
     }
-    
+
     public function bounding_box()
     {
         $max_x = -INF;
         $max_y = -INF;
         $min_x = INF;
         $min_y = INF;
-        
+
         if (!$this->with_z)
         {
             foreach ($this->points as $p)
@@ -38,7 +38,7 @@ class LineString extends Geometry
         else
         {
             $max_z = -INF;
-            $min_z = INF;			
+            $min_z = INF;
 
             foreach ($this->points as $p)
             {
@@ -65,7 +65,7 @@ class LineString extends Geometry
         }
         return $rep;
     }
-    
+
     public function text_representation($allow_z = true, $allow_m = true)
     {
         return implode(',', array_map(create_function('$p', 'return $p->text_representation('.intval($allow_z).','.intval($allow_m).');'), $this->points));
@@ -77,7 +77,7 @@ class LineString extends Geometry
         $line->points = $points;
         return $line;
     }
-    
+
     public static function from_array($points, $srid = null, $with_z = false, $with_m = false)
     {
         $line = new self($srid, $with_z, $with_m);

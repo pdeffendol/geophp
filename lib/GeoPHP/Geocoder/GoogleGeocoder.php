@@ -41,7 +41,7 @@ class GoogleGeocoder extends AbstractGeocoder
         );
 
         $request_url = $this->api_url.'?'.http_build_query($params);
-       
+
         // Check the cache
         if ($this->is_caching && $this->cache_exists($location))
             $response = $this->get_file_data($this->cache_filename);
@@ -148,12 +148,12 @@ class GoogleGeocoder extends AbstractGeocoder
             else
             {
                 throw new GoogleGeocoderError("Bad Request made.");
-            }	
-        }	
+            }
+        }
         catch (GeoPhp_GoogleGeocoderError $geo)
         {
             return $geo->getMessage();
-        }	
+        }
      }
 }
 ?>

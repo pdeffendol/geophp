@@ -22,13 +22,13 @@ class Envelope
 
     public $srid;
     public $with_z;
-    
+
     public function __construct($srid = null, $with_z = false)
     {
         $this->srid = $srid === null ? Constants::DEFAULT_SRID : $srid;
         $this->with_z = $with_z;
     }
-    
+
     public function __get($name)
     {
         switch ($name)
@@ -43,7 +43,7 @@ class Envelope
                 return $this->ll->x;
         }
     }
-    
+
     /**
      * Calculate the center point of the box
      */
@@ -61,7 +61,7 @@ class Envelope
         list($e->ll, $e->ur) = $points;
         return $e;
     }
-    
+
     /**
      * Construct an Envelope from a set of coordinates in array format
      */

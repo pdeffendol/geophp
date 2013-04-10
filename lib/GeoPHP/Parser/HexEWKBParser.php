@@ -13,7 +13,7 @@ class HexEWKBParser extends EWKBParser
         }
         return $result;
     }
-    
+
     public function parse($hexewkb)
     {
         return parent::parse($this->decode_hex($hexewkb));

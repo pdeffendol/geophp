@@ -14,15 +14,15 @@
 //     $coll->geometries[] = $point;
 //     $this->assertEquals(1, count($coll->geometries));
 //     $this->assertEquals(Point::from_xy(4, -5), $coll->geometries[0]);
-    
+
 //     $line = LineString::from_array(array(array(1.1, 2.2), array(3.3, 4.4)));
 //     $coll->geometries[] = $line;
 //     $this->assertEquals(2, count($coll->geometries));
 //     $this->assertEquals(LineString::from_array(array(array(1.1, 2.2), array(3.3, 4.4))), $coll->geometries[1]);
-    
+
 //     $this->assertEquals(444, $coll->srid);
 //   }
-  
+
 //   public function test_geometrycollection_ewkb()
 //   {
 //     $coll = GeometryCollection::from_geometries(array(Point::from_xy(4, -5, 444), LineString::from_array(array(array(1.1, 2.2), array(3.3, 4.4)), 444)), 444);
@@ -31,7 +31,7 @@
 //     $coll = GeometryCollection::from_geometries(array(Point::from_xym(4, -5, 3, 444), LineString::from_array(array(array(1.1, 2.2, 3), array(3.3, 4.4, 3)), 444, false, true)), 444, false, true);
 //     $this->assertEquals('0107000060BC010000020000000101000040000000000000104000000000000014C000000000000008400102000040020000009A9999999999F13F9A9999999999014000000000000008406666666666660A409A999999999911400000000000000840', $coll->to_hexewkb());
 //   }
-  
+
 //   public function test_geometrycollection_ewkt()
 //   {
 //     $coll = GeometryCollection::from_geometries(array(Point::from_xy(4, -5), LineString::from_array(array(array(1.1, 2.2), array(3.3, 4.4)))), 444);

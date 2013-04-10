@@ -6,13 +6,13 @@ class EWKTTokenizer
     private $ewkt;
     private $pos;
     const REGEX = '/^\s*([\w.-]+)s*/';
-    
+
     public function __construct($ewkt)
     {
         $this->ewkt = trim($ewkt); // Trim trailing whitespace
-        $this->pos = 0;				
+        $this->pos = 0;
     }
-    
+
     /**
      * Get next token, and advance the position for scanning
      */
@@ -41,8 +41,8 @@ class EWKTTokenizer
             }
         }
     }
-    
-    
+
+
     /**
      * Get next token, don't advance pointer
      */
@@ -71,7 +71,7 @@ class EWKTTokenizer
             }
         }
     }
-    
+
     public function done()
     {
         if (!$this->eos())
@@ -79,7 +79,7 @@ class EWKTTokenizer
             throw new EWKTFormatError('Trailing data');
         }
     }
-    
+
     private function eos()
     {
         return $this->pos == strlen($this->ewkt);

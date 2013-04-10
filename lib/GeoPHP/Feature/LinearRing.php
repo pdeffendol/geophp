@@ -12,7 +12,7 @@ class LinearRing extends LineString
         $line->points = $points;
         return $line;
     }
-    
+
     public static function from_array($points, $srid = null, $with_z = false, $with_m = false)
     {
         $line = new self($srid, $with_z, $with_m);

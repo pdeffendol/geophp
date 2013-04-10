@@ -19,7 +19,7 @@ class MultiPolygon extends GeometryCollection
                 break;
         }
     }
-    
+
     public function __set($name, $value)
     {
         switch ($name)
@@ -29,7 +29,7 @@ class MultiPolygon extends GeometryCollection
                 break;
         }
     }
-    
+
     public function text_representation($allow_z = true, $allow_m = true)
     {
         return implode(',', array_map(create_function('$poly', 'return "(".$poly->text_representation('.intval($allow_z).', '.intval($allow_m).').")";'), $this->polygons));

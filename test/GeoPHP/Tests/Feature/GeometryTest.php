@@ -19,17 +19,17 @@ class GeometryTest extends \PHPUnit_Framework_TestCase
                         array(4,4,2),
                         array(4,2,1),
                         array(1,2,0));
-        
+
         $ring1 = LinearRing::from_array($ring1_coords, 444, true);
         $ring2 = LinearRing::from_array($ring2_coords, 444, true);
-        
+
         $poly = Polygon::from_linear_rings(array($ring1, $ring2), 444, true);
-        
+
         $e = $poly->extent();
 
         $this->assertTrue($e->ll instanceof Point);
         $this->assertTrue($e->ur instanceof Point);
-        
+
         $this->assertEquals(0, $e->ll->x);
         $this->assertEquals(1, $e->ll->y);
         $this->assertEquals(0, $e->ll->z);

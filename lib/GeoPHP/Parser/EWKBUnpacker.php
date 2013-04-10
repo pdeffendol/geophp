@@ -5,19 +5,19 @@ class EWKBUnpacker
 {
     const NDR = 1;
     const XDR = 0;
-    
+
     private $ewkb;
     private $position;
-    
+
     private $uint_marker;
     private $double_marker;
-    
+
     public function __construct($ewkb)
     {
         $this->ewkb = $ewkb;
-        $this->position = 0;				
+        $this->position = 0;
     }
-    
+
     public function read_double()
     {
         $i = $this->position;
@@ -27,10 +27,10 @@ class EWKBUnpacker
         {
             throw new EWKBFormatError("Truncated data");
         }
-        
+
         return current(unpack($this->double_marker."value", $packed_double));
     }
-    
+
     public function read_uint()
     {
         $i = $this->position;
@@ -40,10 +40,10 @@ class EWKBUnpacker
         {
             throw new EWKBFormatError("Truncated data");
         }
-        
+
         return current(unpack($this->uint_marker."value", $packed_uint));
     }
-    
+
     public function read_byte()
     {
         $i = $this->position;
@@ -53,24 +53,24 @@ class EWKBUnpacker
         {
             throw new EWKBFormatError("Truncated data");
         }
-        
+
         return current(unpack("Cvalue", $packed_byte));
     }
-    
+
     public function set_endianness($eness)
     {
         if ($eness == self::NDR)
         {
             $this->uint_marker = 'V';
             $this->double_marker = 'd'; // should be E
-        }	
+        }
         elseif ($eness == self::XDR)
         {
             $this->uint_marker = 'N';
             $this->double_marker = 'd'; // should be G
-        }	
+        }
     }
-    
+
     public function done()
     {
         if ($this->position != strlen($this->ewkb))

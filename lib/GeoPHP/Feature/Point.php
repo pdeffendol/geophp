@@ -7,19 +7,19 @@ class Point extends Geometry
     public $y;
     public $z;
     public $m;
-    
+
     public function __construct($srid = null, $with_z = false, $with_m = false)
     {
         parent::__construct($srid, $with_z, $with_m);
         $this->binary_type = 1;
         $this->text_type = 'POINT';
-        
+
         $this->x = 0;
         $this->y = 0;
         $this->z = 0;
         $this->m = 0;
     }
-    
+
     public function __get($name)
     {
         switch ($name)
@@ -33,7 +33,7 @@ class Point extends Geometry
                 break;
         }
     }
-    
+
     public function __set($name, $value)
     {
         switch ($name)
@@ -47,19 +47,19 @@ class Point extends Geometry
                 break;
         }
     }
-    
+
     public function set_xy($x, $y)
     {
         $this->x = $x;
         $this->y = $y;
     }
-    
+
     public function set_xyz($x, $y, $z)
     {
         $this->set_xy($x, $y);
         $this->z = $z;
     }
-    
+
     public function bounding_box()
     {
         if (!$this->with_z)
@@ -77,7 +77,7 @@ class Point extends Geometry
             );
         }
     }
-    
+
     public function binary_representation($allow_z = true, $allow_m = true)
     {
         $rep = pack('dd', $this->x, $this->y);
@@ -85,7 +85,7 @@ class Point extends Geometry
         if ($this->with_m && $allow_m) $rep .= pack('d', $this->m);
         return $rep;
     }
-    
+
     public function text_representation($allow_z = true, $allow_m = true)
     {
         $rep = $this->x.' '.$this->y;
@@ -93,26 +93,26 @@ class Point extends Geometry
         if ($this->with_m && $allow_m) $rep .= ' '.$this->m;
         return $rep;
     }
-    
+
     public static function from_xy($x, $y, $srid = null)
     {
         $point = new self($srid);
         $point->set_xy($x, $y);
         return $point;
     }
-    
+
     public static function from_xyz($x, $y, $z, $srid = null)
     {
         $point = new self($srid, true);
         $point->set_xyz($x, $y, $z);
         return $point;
     }
-    
+
     public static function from_lon_lat($x, $y, $srid = null)
     {
         return self::from_xy($x, $y, $srid);
     }
-    
+
     public static function from_xym($x, $y, $m, $srid = null)
     {
         $point = new self($srid, false, true);
@@ -120,7 +120,7 @@ class Point extends Geometry
         $point->m = $m;
         return $point;
     }
-    
+
     public static function from_xyzm($x, $y, $z, $m, $srid = null)
     {
         $point = new self($srid, true, true);
@@ -128,7 +128,7 @@ class Point extends Geometry
         $point->m = $m;
         return $point;
     }
-    
+
     public static function from_array($coords, $srid = null, $with_z = false, $with_m = false)
     {
         if (!$with_z && !$with_m)
