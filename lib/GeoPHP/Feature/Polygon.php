@@ -15,18 +15,14 @@ class Polygon extends Geometry
 
     public function bounding_box()
     {
-        if (!$this->with_z)
-        {
+        if (!$this->with_z) {
             return $this->rings[0]->bounding_box();
-        }
-        else
-        {
+        } else {
             $bbox = $this->rings[0]->bounding_box();
             $min_z = $bbox[0]->z;
             $max_z = $bbox[1]->z;
 
-            for($i=1; $i<count($this->rings); $i++)
-            {
+            for ($i=1; $i<count($this->rings); $i++) {
                 $ringbbox = $this->rings[$i]->bounding_box();
                 $ll = $ringbbox[0];
                 $ur = $ringbbox[1];
@@ -44,10 +40,10 @@ class Polygon extends Geometry
     public function binary_representation($allow_z = true, $allow_m = true)
     {
         $rep = pack('V', count($this->rings));
-        foreach ($this->rings as $ring)
-        {
+        foreach ($this->rings as $ring) {
             $rep .= $ring->binary_representation($allow_z, $allow_m);
         }
+
         return $rep;
     }
 
@@ -60,16 +56,17 @@ class Polygon extends Geometry
     {
         $poly = new self($srid, $with_z, $with_m);
         $poly->rings = $rings;
+
         return $poly;
     }
 
     public static function from_array($point_sets, $srid = null, $with_z = false, $with_m = false)
     {
         $poly = new self($srid, $with_z, $with_m);
-        foreach ($point_sets as $set)
-        {
+        foreach ($point_sets as $set) {
             $poly->rings[] = LinearRing::from_array($set, $srid, $with_z, $with_m);
         }
+
         return $poly;
     }
 }

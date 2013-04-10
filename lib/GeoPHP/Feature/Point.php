@@ -22,8 +22,7 @@ class Point extends Geometry
 
     public function __get($name)
     {
-        switch ($name)
-        {
+        switch ($name) {
             case 'lat':
                 return $this->y;
                 break;
@@ -36,8 +35,7 @@ class Point extends Geometry
 
     public function __set($name, $value)
     {
-        switch ($name)
-        {
+        switch ($name) {
             case 'lat':
                 $this->y = $value;
                 break;
@@ -62,15 +60,12 @@ class Point extends Geometry
 
     public function bounding_box()
     {
-        if (!$this->with_z)
-        {
+        if (!$this->with_z) {
             return array(
                 self::from_xy($this->x, $this->y),
                 self::from_xy($this->x, $this->y)
             );
-        }
-        else
-        {
+        } else {
             return array(
                 self::from_xyz($this->x, $this->y, $this->z),
                 self::from_xyz($this->x, $this->y, $this->z)
@@ -98,6 +93,7 @@ class Point extends Geometry
     {
         $point = new self($srid);
         $point->set_xy($x, $y);
+
         return $point;
     }
 
@@ -105,6 +101,7 @@ class Point extends Geometry
     {
         $point = new self($srid, true);
         $point->set_xyz($x, $y, $z);
+
         return $point;
     }
 
@@ -118,6 +115,7 @@ class Point extends Geometry
         $point = new self($srid, false, true);
         $point->set_xy($x, $y);
         $point->m = $m;
+
         return $point;
     }
 
@@ -126,25 +124,19 @@ class Point extends Geometry
         $point = new self($srid, true, true);
         $point->set_xyz($x, $y, $z);
         $point->m = $m;
+
         return $point;
     }
 
     public static function from_array($coords, $srid = null, $with_z = false, $with_m = false)
     {
-        if (!$with_z && !$with_m)
-        {
+        if (!$with_z && !$with_m) {
             return self::from_xy($coords[0], $coords[1], $srid);
-        }
-        elseif ($with_z && $with_m)
-        {
+        } elseif ($with_z && $with_m) {
             return self::from_xyzm($coords[0], $coords[1], $coords[2], $coords[3], $srid);
-        }
-        elseif ($with_z)
-        {
+        } elseif ($with_z) {
             return self::from_xyz($coords[0], $coords[1], $coords[2], $srid);
-        }
-        else
-        {
+        } else {
             return self::from_xym($coords[0], $coords[1], $coords[2], $srid);
         }
     }

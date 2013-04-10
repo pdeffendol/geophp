@@ -34,6 +34,7 @@ class EWKBParser
          $this->with_m = null;
          $geom = $this->parse_geometry();
          $this->unpacker->done();
+
          return $geom;
      }
 
@@ -42,36 +43,29 @@ class EWKBParser
         $this->unpacker->set_endianness($this->unpacker->read_byte());
         $type = $this->unpacker->read_uint();
 
-        if ($type & Constants::Z_MASK)
-        {
+        if ($type & Constants::Z_MASK) {
             $this->with_z = true;
             $type = ($type & ~Constants::Z_MASK);
         }
 
-        if ($type & Constants::M_MASK)
-        {
+        if ($type & Constants::M_MASK) {
             $this->with_m = true;
             $type = ($type & ~Constants::M_MASK);
         }
 
-        if ($type & Constants::SRID_MASK)
-        {
+        if ($type & Constants::SRID_MASK) {
             $this->srid = $this->unpacker->read_uint();
             $type = $type & ~Constants::SRID_MASK;
-        }
-        elseif (!$this->srid)
-        {
+        } elseif (!$this->srid) {
             // SRID is not present in parts of multi geometries, so use the parent
             $this->srid = Constants::DEFAULT_SRID;
         }
 
-        if (isset($this->type_map[$type]))
-        {
+        if (isset($this->type_map[$type])) {
             $func = "parse_".$this->type_map[$type];
+
             return $this->$func();
-        }
-        else
-        {
+        } else {
             throw new EWKBFormatError("Invalid geometry type");
         }
      }
@@ -80,24 +74,20 @@ class EWKBParser
      {
          $x = $this->unpacker->read_double();
          $y = $this->unpacker->read_double();
-         if (!$this->with_z && !$this->with_m)
-         {
+         if (!$this->with_z && !$this->with_m) {
              return Point::from_xy($x, $y, $this->srid);
-         }
-         elseif ($this->with_z && $this->with_m)
-         {
+         } elseif ($this->with_z && $this->with_m) {
              $z = $this->unpacker->read_double();
              $m = $this->unpacker->read_double();
+
              return Point::from_xyzm($x, $y, $z, $m, $this->srid);
-         }
-         elseif ($this->with_z)
-         {
+         } elseif ($this->with_z) {
              $z = $this->unpacker->read_double();
+
              return Point::from_xyz($x, $y, $z, $this->srid);
-         }
-         else // with_m
-         {
+         } else { // with_m
              $m = $this->unpacker->read_double();
+
              return Point::from_xym($x, $y, $m, $this->srid);
          }
      }
@@ -116,8 +106,7 @@ class EWKBParser
      {
          $num_rings = $this->unpacker->read_uint();
          $rings = array();
-         for ($i=0; $i<$num_rings; $i++)
-         {
+         for ($i=0; $i<$num_rings; $i++) {
              $rings[] = $this->parse_linear_ring();
          }
 
@@ -148,8 +137,7 @@ class EWKBParser
      {
          $num_geometries = $this->unpacker->read_uint();
          $geoms = array();
-         for ($i=0; $i<$num_geometries; $i++)
-         {
+         for ($i=0; $i<$num_geometries; $i++) {
              $geoms[] = $this->parse_geometry();
          }
 
@@ -160,8 +148,7 @@ class EWKBParser
      {
          $num_points = $this->unpacker->read_uint();
          $points = array();
-         for ($i=0; $i<$num_points; $i++)
-         {
+         for ($i=0; $i<$num_points; $i++) {
              $points[] = $this->parse_point();
          }
 

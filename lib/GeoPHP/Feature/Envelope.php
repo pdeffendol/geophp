@@ -31,8 +31,7 @@ class Envelope
 
     public function __get($name)
     {
-        switch ($name)
-        {
+        switch ($name) {
             case 'top':
                 return $this->ur->y;
             case 'right':
@@ -59,6 +58,7 @@ class Envelope
     {
         $e = new self($srid, $with_z);
         list($e->ll, $e->ur) = $points;
+
         return $e;
     }
 
@@ -70,6 +70,7 @@ class Envelope
         $e = new self($srid, $with_z);
         $e->ll = Point::from_array($coords[0], $srid, $with_z);
         $e->ur = Point::from_array($coords[1], $srid, $with_z);
+
         return $e;
     }
 }

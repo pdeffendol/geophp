@@ -65,25 +65,21 @@ abstract class Geometry
         $ewkb .= chr(1); // little endian
 
         $type = $this->binary_type;
-        if ($this->with_z && $allow_z)
-        {
+        if ($this->with_z && $allow_z) {
             $type |= Constants::Z_MASK;
         }
-        if ($this->with_m && $allow_m)
-        {
+        if ($this->with_m && $allow_m) {
             $type |= Constants::M_MASK;
         }
-        if ($this->srid != Constants::DEFAULT_SRID && $allow_srid)
-        {
+        if ($this->srid != Constants::DEFAULT_SRID && $allow_srid) {
             $type |= Constants::SRID_MASK;
             $ewkb .= pack('VV', $type, $this->srid);
-        }
-        else
-        {
+        } else {
             $ewkb .= pack('V', $type);
         }
 
         $ewkb .= $this->binary_representation($allow_z, $allow_m);
+
         return $ewkb;
     }
 
@@ -96,29 +92,28 @@ abstract class Geometry
     {
         $ewkb = $this->to_ewkb($allow_srid, $allow_z, $allow_m);
         $hex = '';
-        for ($i = 0; $i < strlen($ewkb); $i++)
-        {
+        for ($i = 0; $i < strlen($ewkb); $i++) {
             $hex .= strtoupper(sprintf('%02x', ord(substr($ewkb, $i, 1))));
         }
+
         return $hex;
     }
 
     public function to_ewkt($allow_srid = true, $allow_z = true, $allow_m = true)
     {
         $ewkt = '';
-        if ($this->srid != Constants::DEFAULT_SRID && $allow_srid)
-        {
+        if ($this->srid != Constants::DEFAULT_SRID && $allow_srid) {
             $ewkt = 'SRID='.$this->srid.';';
         }
 
         $ewkt .= $this->text_type;
 
-        if ($this->with_m && $allow_m && (!$this->with_z || !$allow_z))
-        {
+        if ($this->with_m && $allow_m && (!$this->with_z || !$allow_z)) {
             $ewkt .= 'M';
         }
 
         $ewkt .= '('.$this->text_representation($allow_z, $allow_m).')';
+
         return $ewkt;
     }
 
@@ -130,18 +125,21 @@ abstract class Geometry
     public static function from_ewkt($ewkt)
     {
         $parser = new EWKTParser;
+
         return $parser->parse($ewkt);
     }
 
     public static function from_ewkb($ewkb)
     {
         $parser = new EWKBParser;
+
         return $parser->parse($ewkb);
     }
 
     public static function from_hexewkb($hexewkb)
     {
         $parser = new HexEWKBParser;
+
         return $parser->parse($hexewkb);
     }
 }

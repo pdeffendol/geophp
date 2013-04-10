@@ -12,8 +12,7 @@ class MultiPolygon extends GeometryCollection
 
     public function __get($name)
     {
-        switch ($name)
-        {
+        switch ($name) {
             case 'polygons':
                 return $this->geometries;
                 break;
@@ -22,8 +21,7 @@ class MultiPolygon extends GeometryCollection
 
     public function __set($name, $value)
     {
-        switch ($name)
-        {
+        switch ($name) {
             case 'polygons':
                 $this->geometries = $value;
                 break;
@@ -44,16 +42,17 @@ class MultiPolygon extends GeometryCollection
     {
         $coll = new self($srid, $with_z, $with_m);
         $coll->geometries = $geometries;
+
         return $coll;
     }
 
     public static function from_array($point_set_sets, $srid = null, $with_z = false, $with_m = false)
     {
         $mp = new self($srid, $with_z, $with_m);
-        foreach ($point_set_sets as $point_set)
-        {
+        foreach ($point_set_sets as $point_set) {
             $mp->geometries[] = Polygon::from_array($point_set, $srid, $with_z, $with_m);
         }
+
         return $mp;
     }
 }

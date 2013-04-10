@@ -37,6 +37,7 @@ class EWKTParser
          $this->is_3dm = false;
          $geom = $this->parse_geometry(true);
          $this->tokenizer->done();
+
          return $geom;
      }
 
@@ -44,46 +45,37 @@ class EWKTParser
      {
 
         $token = $this->tokenizer->get_next_token();
-        if ($token == "SRID")
-        {
+        if ($token == "SRID") {
             // Parse SRID=nnnn
-            if (!$allow_srid)
-            {
+            if (!$allow_srid) {
                 throw new EWKTFormatError('SRID not allowed here');
             }
-            if ($this->tokenizer->get_next_token() != '=')
-            {
+            if ($this->tokenizer->get_next_token() != '=') {
                 throw new EWKTFormatError('Invalid SRID expression');
             }
 
             $this->srid = intval($this->tokenizer->get_next_token());
-            if ($this->tokenizer->get_next_token() != ';')
-            {
+            if ($this->tokenizer->get_next_token() != ';') {
                 throw new EWKTFormatError('Invalid SRID separator');
             }
 
             $type = $this->tokenizer->get_next_token();
-        }
-        else
-        {
+        } else {
             $this->srid = $this->srid ? $this->srid : Constants::DEFAULT_SRID;
             $type = $token;
         }
 
-        if (substr($type, -1, 1) == 'M')
-        {
+        if (substr($type, -1, 1) == 'M') {
             $this->is_3dm = true;
             $this->with_m = true;
             $type = substr($type, 0, -1);
         }
 
-        if (isset($this->type_map[$type]))
-        {
+        if (isset($this->type_map[$type])) {
             $func = "parse_".$this->type_map[$type];
+
             return $this->$func();
-        }
-        else
-        {
+        } else {
             throw new EWKTFormatError("Invalid geometry type: ".$type);
         }
      }
@@ -93,58 +85,43 @@ class EWKTParser
          $x = $this->tokenizer->get_next_token();
          $y = $this->tokenizer->get_next_token();
 
-         if ($x === null || $y === null)
-         {
+         if ($x === null || $y === null) {
              throw new EWKTFormatError('Bad POINT format');
          }
 
-         if ($this->is_3dm)
-         {
+         if ($this->is_3dm) {
              $m = $this->tokenizer->get_next_token();
 
-             if ($m === null || $m == ',' || $m == ')')
-             {
+             if ($m === null || $m == ',' || $m == ')') {
                  throw new EWKTFormatError('m component expected but not found');
-             }
-             else
-             {
+             } else {
                  $point = Point::from_xym(floatval($x), floatval($y), floatval($m), $this->srid);
                  $next = $this->tokenizer->get_next_token();
              }
-         }
-         else
-         {
+         } else {
              $z = $this->tokenizer->get_next_token();
 
-             if ($z === null)
-             {
+             if ($z === null) {
                  throw new EWKTFormatError('Incorrect termination of EWKT string');
              }
 
-             if ($z == ',' || $z == ')')
-             {
+             if ($z == ',' || $z == ')') {
                  // No Z value
                  $point = Point::from_xy(floatval($x), floatval($y), $this->srid);
                  $next = $z;
-             }
-             else
-             {
+             } else {
                  $m = $this->tokenizer->get_next_token();
 
-                 if ($m === null)
-                 {
+                 if ($m === null) {
                      throw new EWKTFormatError('Incorrect termination of EWKT string');
                  }
 
                  $this->with_z = true;
-                 if ($m == ',' || $m == ')')
-                 {
+                 if ($m == ',' || $m == ')') {
                      // 3dz
                      $point = Point::from_xyz(floatval($x), floatval($y), floatval($z), $this->srid);
                      $next = $m;
-                 }
-                 else
-                 {
+                 } else {
                      // 4d
                      $this->with_m = true;
                      $point = Point::from_xyzm(floatval($x), floatval($y), floatval($z), floatval($m), $this->srid);
@@ -158,15 +135,13 @@ class EWKTParser
 
      private function parse_point()
      {
-         if ($this->tokenizer->get_next_token() != '(')
-         {
+         if ($this->tokenizer->get_next_token() != '(') {
              throw new EWKTFormatError('Invalid POINT');
          }
 
          list($token, $point) = $this->parse_coords();
 
-         if ($token != ')')
-         {
+         if ($token != ')') {
              throw new EWKTFormatError('Incorrect termination of EWKT string');
          }
 
@@ -175,8 +150,7 @@ class EWKTParser
 
      private function parse_line_string()
      {
-         if ($this->tokenizer->get_next_token() != '(')
-         {
+         if ($this->tokenizer->get_next_token() != '(') {
              throw new EWKTFormatError('Invalid LINESTRING');
          }
 
@@ -185,8 +159,7 @@ class EWKTParser
 
      private function parse_linear_ring()
      {
-         if ($this->tokenizer->get_next_token() != '(')
-         {
+         if ($this->tokenizer->get_next_token() != '(') {
              throw new EWKTFormatError('Invalid Linear Ring');
          }
 
@@ -195,19 +168,16 @@ class EWKTParser
 
      private function parse_polygon()
      {
-         if ($this->tokenizer->get_next_token() != '(')
-         {
+         if ($this->tokenizer->get_next_token() != '(') {
              throw new EWKTFormatError('Invalid POLYGON');
          }
 
          $token = '';
          $rings = array();
-         while ($token != ')')
-         {
+         while ($token != ')') {
              $rings[] = $this->parse_linear_ring();
              $token = $this->tokenizer->get_next_token(); // comma
-             if ($token === null)
-             {
+             if ($token === null) {
                  throw new EWKTFormatError('Incorrect termination of EWKT string');
              }
          }
@@ -221,31 +191,25 @@ class EWKTParser
      */
      private function parse_multi_point()
      {
-         if ($this->tokenizer->get_next_token() != '(')
-         {
+         if ($this->tokenizer->get_next_token() != '(') {
              throw new EWKTFormatError('Invalid MULTIPOINT');
          }
 
         $token = $this->tokenizer->check_next_token();
-        if ($token == '(')
-        {
+        if ($token == '(') {
             // Follow spec
              $token = '';
              $points = array();
-             while ($token != ')')
-             {
+             while ($token != ')') {
                  $points[] = $this->parse_point();
                  $token = $this->tokenizer->get_next_token(); // comma
-                 if ($token === null)
-                 {
+                 if ($token === null) {
                      throw new EWKTFormatError('Incorrect termination of EWKT string');
                  }
              }
 
              return MultiPoint::from_points($points, $this->srid, $this->with_z, $this->with_m);
-        }
-        else
-        {
+        } else {
             // PostGIS format
             return $this->parse_point_list('MultiPoint');
         }
@@ -253,19 +217,16 @@ class EWKTParser
 
      private function parse_multi_line_string()
      {
-         if ($this->tokenizer->get_next_token() != '(')
-         {
+         if ($this->tokenizer->get_next_token() != '(') {
              throw new EWKTFormatError('Invalid MULTILINESTRING');
          }
 
          $token = '';
          $lines = array();
-         while ($token != ')')
-         {
+         while ($token != ')') {
              $lines[] = $this->parse_line_string();
              $token = $this->tokenizer->get_next_token(); // comma
-             if ($token === null)
-             {
+             if ($token === null) {
                  throw new EWKTFormatError('Incorrect termination of EWKT string');
              }
          }
@@ -275,19 +236,16 @@ class EWKTParser
 
      private function parse_multi_polygon()
      {
-         if ($this->tokenizer->get_next_token() != '(')
-         {
+         if ($this->tokenizer->get_next_token() != '(') {
              throw new EWKTFormatError('Invalid MULTIPOLYGON');
          }
 
          $token = '';
          $polys = array();
-         while ($token != ')')
-         {
+         while ($token != ')') {
              $polys[] = $this->parse_polygon();
              $token = $this->tokenizer->get_next_token(); // comma
-             if ($token === null)
-             {
+             if ($token === null) {
                  throw new EWKTFormatError('Incorrect termination of EWKT string');
              }
          }
@@ -297,19 +255,16 @@ class EWKTParser
 
      private function parse_geometry_collection()
      {
-         if ($this->tokenizer->get_next_token() != '(')
-         {
+         if ($this->tokenizer->get_next_token() != '(') {
              throw new EWKTFormatError('Invalid GEOMETRYCOLLECTION');
          }
 
          $token = '';
          $geoms = array();
-         while ($token != ')')
-         {
+         while ($token != ')') {
              $geoms[] = $this->parse_geometry(false);
              $token = $this->tokenizer->get_next_token(); // comma
-             if ($token === null)
-             {
+             if ($token === null) {
                  throw new EWKTFormatError('Incorrect termination of EWKT string');
              }
          }
@@ -322,11 +277,9 @@ class EWKTParser
          $points = array();
 
          $token = '';
-         while ($token != ')')
-         {
+         while ($token != ')') {
              list($token, $points[]) = $this->parse_coords();
-             if ($token === null)
-             {
+             if ($token === null) {
                  throw new EWKTFormatError('Incorrect termination of EWKT string');
              }
          }

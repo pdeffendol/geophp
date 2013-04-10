@@ -19,29 +19,23 @@ class EWKTTokenizer
     public function get_next_token()
     {
         $match = preg_match(self::REGEX, substr($this->ewkt, $this->pos), $matches);
-        if ($match)
-        {
+        if ($match) {
             $this->pos += strlen($matches[0]);
+
             return $matches[1];
-        }
-        else
-        {
-            if ($this->eos())
-            {
+        } else {
+            if ($this->eos()) {
                 return null;
-            }
-            else
-            {
+            } else {
                 $char = $this->ewkt[$this->pos++];
-                while ($char == ' ')
-                {
+                while ($char == ' ') {
                     $char = $this->ewkt[$this->pos++];
                 }
+
                 return $char;
             }
         }
     }
-
 
     /**
      * Get next token, don't advance pointer
@@ -49,24 +43,18 @@ class EWKTTokenizer
     public function check_next_token()
     {
         $match = preg_match(self::REGEX, substr($this->ewkt, $this->pos), $matches);
-        if ($match)
-        {
+        if ($match) {
             return $matches[1];
-        }
-        else
-        {
-            if ($this->eos())
-            {
+        } else {
+            if ($this->eos()) {
                 return null;
-            }
-            else
-            {
+            } else {
                 $pos = $this->pos;
                 $char = $this->ewkt[$pos++];
-                while ($char == ' ')
-                {
+                while ($char == ' ') {
                     $char = $this->ewkt[$pos++];
                 }
+
                 return $char;
             }
         }
@@ -74,8 +62,7 @@ class EWKTTokenizer
 
     public function done()
     {
-        if (!$this->eos())
-        {
+        if (!$this->eos()) {
             throw new EWKTFormatError('Trailing data');
         }
     }

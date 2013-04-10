@@ -12,8 +12,7 @@ class MultiLineString extends GeometryCollection
 
     public function __get($name)
     {
-        switch ($name)
-        {
+        switch ($name) {
             case 'lines':
                 return $this->geometries;
                 break;
@@ -22,8 +21,7 @@ class MultiLineString extends GeometryCollection
 
     public function __set($name, $value)
     {
-        switch ($name)
-        {
+        switch ($name) {
             case 'lines':
                 $this->geometries = $value;
                 break;
@@ -44,16 +42,17 @@ class MultiLineString extends GeometryCollection
     {
         $coll = new self($srid, $with_z, $with_m);
         $coll->geometries = $geometries;
+
         return $coll;
     }
 
     public static function from_array($point_sets, $srid = null, $with_z = false, $with_m = false)
     {
         $ml = new self($srid, $with_z, $with_m);
-        foreach ($point_sets as $set)
-        {
+        foreach ($point_sets as $set) {
             $ml->geometries[] = Linestring::from_array($set, $srid, $with_z, $with_m);
         }
+
         return $ml;
     }
 }

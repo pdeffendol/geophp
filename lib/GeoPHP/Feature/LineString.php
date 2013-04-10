@@ -21,27 +21,23 @@ class LineString extends Geometry
         $min_x = INF;
         $min_y = INF;
 
-        if (!$this->with_z)
-        {
-            foreach ($this->points as $p)
-            {
+        if (!$this->with_z) {
+            foreach ($this->points as $p) {
                 if ($p->x < $min_x) $min_x = $p->x;
                 if ($p->y < $min_y) $min_y = $p->y;
                 if ($p->x > $max_x) $max_x = $p->x;
                 if ($p->y > $max_y) $max_y = $p->y;
             }
+
             return array(
                 Point::from_xy($min_x, $min_y),
                 Point::from_xy($max_x, $max_y)
             );
-        }
-        else
-        {
+        } else {
             $max_z = -INF;
             $min_z = INF;
 
-            foreach ($this->points as $p)
-            {
+            foreach ($this->points as $p) {
                 if ($p->x < $min_x) $min_x = $p->x;
                 if ($p->y < $min_y) $min_y = $p->y;
                 if ($p->z < $min_z) $min_z = $p->z;
@@ -49,6 +45,7 @@ class LineString extends Geometry
                 if ($p->y > $max_y) $max_y = $p->y;
                 if ($p->z > $max_z) $max_z = $p->z;
             }
+
             return array(
                 Point::from_xyz($min_x, $min_y, $min_z),
                 Point::from_xyz($max_x, $max_y, $max_z)
@@ -59,10 +56,10 @@ class LineString extends Geometry
     public function binary_representation($allow_z = true, $allow_m = true)
     {
         $rep = pack('V', count($this->points));
-        foreach ($this->points as $point)
-        {
+        foreach ($this->points as $point) {
             $rep .= $point->binary_representation($allow_z, $allow_m);
         }
+
         return $rep;
     }
 
@@ -75,16 +72,17 @@ class LineString extends Geometry
     {
         $line = new self($srid, $with_z, $with_m);
         $line->points = $points;
+
         return $line;
     }
 
     public static function from_array($points, $srid = null, $with_z = false, $with_m = false)
     {
         $line = new self($srid, $with_z, $with_m);
-        foreach ($points as $point)
-        {
+        foreach ($points as $point) {
             $line->points[] = Point::from_array($point, $srid, $with_z, $with_m);
         }
+
         return $line;
     }
 }

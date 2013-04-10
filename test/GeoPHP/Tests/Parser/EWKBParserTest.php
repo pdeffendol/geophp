@@ -98,7 +98,6 @@ class EWKBParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(5, $point->y);
     }
 
-
     /*
     public function test_point_bigendian()
     {

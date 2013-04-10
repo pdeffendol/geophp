@@ -12,23 +12,20 @@ class GoogleGeocoder extends AbstractGeocoder
     private $cache_file_path;
     private $cache_filename;
 
-    function __construct($my_key, $options = null)
+    public function __construct($my_key, $options = null)
     {
         parent::__construct($options);
 
         $this->api_key = $my_key;
 
-        if ($this->options['cache'] !== null)
-        {
+        if ($this->options['cache'] !== null) {
             $this->is_caching = true;
             $this->cache_file_path = $this->options['cache'];
 
-            if (!file_exists($this->cache_file_path))
-            {
+            if (!file_exists($this->cache_file_path)) {
                 mkdir($this->cache_file_path,0777);
             }
-        }
-        else
+        } else
             $this->is_caching = false;
     }
 
@@ -45,8 +42,7 @@ class GoogleGeocoder extends AbstractGeocoder
         // Check the cache
         if ($this->is_caching && $this->cache_exists($location))
             $response = $this->get_file_data($this->cache_filename);
-        else
-        {
+        else {
             $response = $this->get_url_response($request_url);
             if ($this->is_caching)
                 $this->cache_response($response,$this->cache_filename);
@@ -64,8 +60,7 @@ class GoogleGeocoder extends AbstractGeocoder
         $res = json_decode($response,true);
         $results = $res['Placemark'];
 
-        foreach ($results as $res)
-        {
+        foreach ($results as $res) {
             $result = array_change_key_case($res,CASE_LOWER);
             $p = Point::from_xy($result['point']['coordinates'][1],$result['point']['coordinates'][0]);
             $output = array();
@@ -78,16 +73,15 @@ class GoogleGeocoder extends AbstractGeocoder
                 $output['city'] = $result['addressdetails']['Country']['AdministrativeArea']['SubAdministrativeArea']['SubAdministrativeAreaName'];
 
             $output['state'] = $result['addressdetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
-            if (isset($result['addressdetails']['Country']['AdministrativeArea']['Locality']['PostalCode']['PostalCodeNumber']))
-            {
+            if (isset($result['addressdetails']['Country']['AdministrativeArea']['Locality']['PostalCode']['PostalCodeNumber'])) {
                 $output['zip'] = $result['addressdetails']['Country']['AdministrativeArea']['Locality']['PostalCode']['PostalCodeNumber'];
             }
             $output['country'] = $result['addressdetails']['Country']['CountryNameCode'];
             $location_details[] = $output;
         }
+
         return $location_details;
     }
-
 
     /*
      * This function checks if the cache file exists.
@@ -114,8 +108,7 @@ class GoogleGeocoder extends AbstractGeocoder
      */
     private function cache_response($response, $cache_filename)
     {
-        if ($response !== false)
-        {
+        if ($response !== false) {
             $tmpf = tempnam('/tmp','GOOGLE');
             $fp = fopen($tmpf,"w");
             fwrite($fp, $response);
@@ -141,17 +134,13 @@ class GoogleGeocoder extends AbstractGeocoder
      {
         $response = file_get_contents($url);
         $res = json_decode($response,true);
-        try
-        {
+        try {
             if ($res['Status']['code'] == 200)
                 return $response;
-            else
-            {
+            else {
                 throw new GoogleGeocoderError("Bad Request made.");
             }
-        }
-        catch (GeoPhp_GoogleGeocoderError $geo)
-        {
+        } catch (GeoPhp_GoogleGeocoderError $geo) {
             return $geo->getMessage();
         }
      }

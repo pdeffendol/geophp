@@ -21,10 +21,8 @@ class GeometryCollection extends Geometry
         $min_x = INF;
         $min_y = INF;
 
-        if (!$this->with_z)
-        {
-            foreach ($this->geometries as $geom)
-            {
+        if (!$this->with_z) {
+            foreach ($this->geometries as $geom) {
                 $bbox = $geom->bounding_box();
                 $ll = $bbox[0];
                 $ur = $bbox[1];
@@ -34,18 +32,16 @@ class GeometryCollection extends Geometry
                 if ($ur->x > $max_x) $max_x = $ur->x;
                 if ($ur->y > $max_y) $max_y = $ur->y;
             }
+
             return array(
                 Point::from_xy($min_x, $min_y),
                 Point::from_xy($max_x, $max_y)
             );
-        }
-        else
-        {
+        } else {
             $max_z = INF;
             $min_z = -INF;
 
-            foreach ($this->geometries as $geom)
-            {
+            foreach ($this->geometries as $geom) {
                 $bbox = $geom->bounding_box();
                 $ll = $bbox[0];
                 $ur = $bbox[1];
@@ -57,6 +53,7 @@ class GeometryCollection extends Geometry
                 if ($ur->y > $max_y) $max_y = $ur->y;
                 if ($ur->z > $max_z) $max_y = $ur->z;
             }
+
             return array(
                 Point::from_xy($min_x, $min_y),
                 Point::from_xy($max_x, $max_y)
@@ -67,10 +64,10 @@ class GeometryCollection extends Geometry
     public function binary_representation($allow_z = true, $allow_m = true)
     {
         $rep = pack('V', count($this->geometries));
-        foreach ($this->geometries as $geometry)
-        {
+        foreach ($this->geometries as $geometry) {
             $rep .= $geometry->to_ewkb(false, $allow_z, $allow_m);
         }
+
         return $rep;
     }
 
@@ -83,6 +80,7 @@ class GeometryCollection extends Geometry
     {
         $coll = new self($srid, $with_z, $with_m);
         $coll->geometries = $geometries;
+
         return $coll;
     }
 }

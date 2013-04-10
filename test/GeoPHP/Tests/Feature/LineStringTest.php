@@ -31,7 +31,6 @@ class LineStringTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(-10, $line->points[1]->m);
     }
 
-
     public function test_linestring_ewkb()
     {
         $coords = array(array(1.1, 2.2, -10, 5),

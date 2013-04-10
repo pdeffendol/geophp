@@ -23,8 +23,7 @@ class EWKBUnpacker
         $i = $this->position;
         $this->position += 8;
         $packed_double = substr($this->ewkb, $i, 8);
-        if (!$packed_double || strlen($packed_double) < 8)
-        {
+        if (!$packed_double || strlen($packed_double) < 8) {
             throw new EWKBFormatError("Truncated data");
         }
 
@@ -36,8 +35,7 @@ class EWKBUnpacker
         $i = $this->position;
         $this->position += 4;
         $packed_uint = substr($this->ewkb, $i, 4);
-        if (!$packed_uint || strlen($packed_uint) < 4)
-        {
+        if (!$packed_uint || strlen($packed_uint) < 4) {
             throw new EWKBFormatError("Truncated data");
         }
 
@@ -49,8 +47,7 @@ class EWKBUnpacker
         $i = $this->position;
         $this->position += 1;
         $packed_byte = substr($this->ewkb, $i, 1);
-        if ($packed_byte === null || strlen($packed_byte) < 1)
-        {
+        if ($packed_byte === null || strlen($packed_byte) < 1) {
             throw new EWKBFormatError("Truncated data");
         }
 
@@ -59,13 +56,10 @@ class EWKBUnpacker
 
     public function set_endianness($eness)
     {
-        if ($eness == self::NDR)
-        {
+        if ($eness == self::NDR) {
             $this->uint_marker = 'V';
             $this->double_marker = 'd'; // should be E
-        }
-        elseif ($eness == self::XDR)
-        {
+        } elseif ($eness == self::XDR) {
             $this->uint_marker = 'N';
             $this->double_marker = 'd'; // should be G
         }
@@ -73,8 +67,7 @@ class EWKBUnpacker
 
     public function done()
     {
-        if ($this->position != strlen($this->ewkb))
-        {
+        if ($this->position != strlen($this->ewkb)) {
             throw new EWKBFormatError('Trailing data (read '.$this->position.' bytes, have '.strlen($this->ewkb).')');
         }
     }

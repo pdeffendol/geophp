@@ -4,7 +4,7 @@ namespace GeoPHP\Geocoder;
 abstract class AbstractGeocoder
 {
     protected $options;
-    function __construct($options = null)
+    public function __construct($options = null)
     {
         $this->options = array(
             "cache" => null,

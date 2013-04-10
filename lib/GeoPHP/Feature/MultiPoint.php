@@ -12,8 +12,7 @@ class MultiPoint extends GeometryCollection
 
     public function __get($name)
     {
-        switch ($name)
-        {
+        switch ($name) {
             case 'points':
                 return $this->geometries;
                 break;
@@ -22,8 +21,7 @@ class MultiPoint extends GeometryCollection
 
     public function __set($name, $value)
     {
-        switch ($name)
-        {
+        switch ($name) {
             case 'points':
                 $this->geometries = $value;
                 break;
@@ -44,16 +42,17 @@ class MultiPoint extends GeometryCollection
     {
         $coll = new self($srid, $with_z, $with_m);
         $coll->geometries = $geometries;
+
         return $coll;
     }
 
     public static function from_array($points, $srid = null, $with_z = false, $with_m = false)
     {
         $mp = new self($srid, $with_z, $with_m);
-        foreach ($points as $point)
-        {
+        foreach ($points as $point) {
             $mp->geometries[] = Point::from_array($point, $srid, $with_z, $with_m);
         }
+
         return $mp;
     }
 }
