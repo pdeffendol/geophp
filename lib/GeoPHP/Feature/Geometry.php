@@ -2,6 +2,9 @@
 namespace GeoPHP\Feature;
 
 use GeoPHP\Constants;
+use GeoPHP\Parser\EWKBParser;
+use GeoPHP\Parser\EWKTParser;
+use GeoPHP\Parser\HexEWKBParser;
 
 abstract class Geometry
 {
